@@ -8,13 +8,11 @@ public class ProximityMine : ProjectileBase {
 	public float activationDelay = 2f;//delay the proximity sensor
 	public float explosionRadius = 6f;
 
-	public GameObject[] players;
-	public GameObject myPlayer;
+	GameController gameController;
 
 	// Use this for initialization
 	void Start () {
-		players = GameObject.FindGameObjectsWithTag("Player");
-
+		gameController = FindObjectOfType<GameController>();
 	}
 	
 	// Update is called once per frame
@@ -34,7 +32,7 @@ public class ProximityMine : ProjectileBase {
 	void CheckForProximty() {
 		int inRangeCount = 0;
 
-		foreach (GameObject go in players) {
+		foreach (GameObject go in gameController.players) {
 
 			if (Vector3.Distance(go.transform.position, transform.position) <= proximity) {
 				inRangeCount++;
