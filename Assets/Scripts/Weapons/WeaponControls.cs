@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WeaponControls : MonoBehaviour {
-	
+
+	public WeaponName startPrimaryWeapon;
+	public WeaponName startSecondaryWeapon;
+
 	public float primaryInterval = 0.1f;
 	public float secondaryInterval = 2f;
-
-	public Transform firePosition;
 
 	public WeaponComponent[] weapons;
 
@@ -19,14 +20,12 @@ public class WeaponControls : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		firePosition = transform.GetChild(0);
-
 		weapons = GetComponentsInChildren<WeaponComponent>();
 
 		DisableAllWeapons();
 
-		ChangeWeapon(WeaponName.SingleShot);
-		ChangeWeapon(WeaponName.None);
+		ChangeWeapon(startPrimaryWeapon);
+		ChangeWeapon(startSecondaryWeapon);
 
 		player  = transform.parent.gameObject.GetComponent<FirstPersonController>();
 
