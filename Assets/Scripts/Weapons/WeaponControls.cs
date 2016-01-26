@@ -37,15 +37,29 @@ public class WeaponControls : MonoBehaviour {
 		if (player.dummy) return;
 
 		// Fire bullet code
-		if (Input.GetKeyDown(KeyCode.Q))
-			InvokeRepeating("FirePrimary", float.Epsilon, primaryInterval);
-		if (Input.GetKeyUp(KeyCode.Q))
-			CancelInvoke("FirePrimary");
-		
-		if (Input.GetKeyDown(KeyCode.E))
-			InvokeRepeating("FireSecondary", float.Epsilon, secondaryInterval);
-		if (Input.GetKeyUp(KeyCode.E))
-			CancelInvoke("FireSecondary");
+
+		if (player.playerID == PlayerID.P2) {
+			if (Input.GetKeyDown (KeyCode.Joystick1Button16))
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			if (Input.GetKeyUp (KeyCode.Joystick1Button16))
+				CancelInvoke ("FirePrimary");
+
+			if (Input.GetKeyDown (KeyCode.Joystick1Button17))
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			if (Input.GetKeyUp (KeyCode.Joystick1Button17))
+				CancelInvoke ("FireSecondary");
+			
+		} else if (player.playerID == PlayerID.P1) {
+			if (Input.GetKeyDown (KeyCode.Q))
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			if (Input.GetKeyUp (KeyCode.Q))
+				CancelInvoke ("FirePrimary");
+
+			if (Input.GetKeyDown (KeyCode.E))
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			if (Input.GetKeyUp (KeyCode.E))
+				CancelInvoke ("FireSecondary");
+		}
 	}
 
 	void FirePrimary()

@@ -20,11 +20,26 @@ public class BoostController : MonoBehaviour {
 		player = GetComponent<FirstPersonController>();
 		trail = GetComponent<TrailRenderer>();
 	}
-	
+
+	bool isBoosting = false;
 	// Update is called once per frame
 	void Update () {
+		isBoosting = false;
 
-		if (Input.GetButton("Boost_"+player.playerID) && fuel > 0 && !blockBoost) {
+		if (player.playerID == PlayerID.P2) {
+			Debug.Log ("b " + Input.GetAxisRaw ("Boost_" + player.playerID));
+			if (Input.GetAxisRaw ("Boost_" + player.playerID)>0 && fuel > 0 && !blockBoost) isBoosting = true;
+
+		} else {
+			if (Input.GetButton ("Boost_" + player.playerID) && fuel > 0 && !blockBoost)  isBoosting = true;
+
+		}
+
+
+		
+			
+		//if (Input.GetButton("Boost_"+player.playerID) && fuel > 0 && !blockBoost) {
+		if (isBoosting) {
 			//deplete fuel
 			fuel -= depletionRate;
 			fuel = Mathf.Clamp(fuel, 0, maxFuel);
