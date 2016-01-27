@@ -7,6 +7,7 @@ public class ProjectileBase : MonoBehaviour {
 	// public vars
 	public float damage;
 	public float speed = 6;
+	public float shipSpeed = 0;
 	public float lifeTime = 1;
 
 	public float collisionOffsetTime = .1f;
@@ -31,10 +32,10 @@ public class ProjectileBase : MonoBehaviour {
 		if (timer >= lifeTime) Destroy(gameObject);
 
 		Vector3 moveDir = new Vector3(0,0,1);//.normalized;
-		Vector3 targetMoveAmount = moveDir * speed;
+		Vector3 targetMoveAmount = moveDir * (speed+shipSpeed);
 		moveAmount = targetMoveAmount;
 
-		RayDown ();
+//		RayDown ();
 
 	}
 
@@ -49,11 +50,38 @@ public class ProjectileBase : MonoBehaviour {
 		if (timer < collisionOffsetTime) return;
 
 		if (collision.gameObject.tag == "Player") {
-			Debug.Log(collision.gameObject.name);
+//			Debug.Log(collision.gameObject.name);
 			collision.gameObject.GetComponent<LifeController>().TakeDamage(damage);
 
 			Destroy(gameObject);
+		} else if (collision.gameObject.tag == "Wall") {
+			Destroy(gameObject);
+				
+		} else if (collision.gameObject.tag == "Projectile") {
+			Destroy(gameObject);
+
 		}
+	}
+
+	protected virtual void OnTriggerEnter(Collider other) {
+		if (timer < collisionOffsetTime) return;
+
+		if (other.gameObject.tag == "Player") {
+//			Debug.Log(other.gameObject.name);
+			other.gameObject.GetComponent<LifeController>().TakeDamage(damage);
+			Destroy(gameObject);
+
+		} else if (other.gameObject.tag == "Wall") {
+			Destroy(gameObject);
+//			Debug.Log("Destroy by WALL");
+
+		} else if (other.gameObject.tag == "Projectile") {
+//			Debug.Log("Destroy by WEAPON");
+			Destroy(gameObject);
+		} else {
+//			Debug.Log("OnTriggerEnter "+other.gameObject.name);
+		}
+
 	}
 
 
@@ -63,7 +91,7 @@ public class ProjectileBase : MonoBehaviour {
 		RaycastHit hit;
 
 		if (Physics.Raycast(ray, out hit, 5f)) {
-			Debug.Log (hit.collider.gameObject.name + " : "+hit.distance);
+//			Debug.Log (hit.collider.gameObject.name + " : "+hit.distance);
 
 			if (hit.distance > 1.7) down = .2f;
 			else down = 0;

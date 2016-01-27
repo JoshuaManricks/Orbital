@@ -73,7 +73,7 @@ public class WeaponControls : MonoBehaviour {
 
 	void FirePrimary()
 	{
-		primaryWeapon.Fire();
+		primaryWeapon.Fire((player.walkSpeed+player.boost)*player.inputY);
 	}
 
 	void FireSecondary()
@@ -92,7 +92,7 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	public void ChangeWeapon(WeaponName newWeapon) {
-		Debug.Log (newWeapon);
+//		Debug.Log (newWeapon);
 
 		//find weaopn
 		foreach (WeaponComponent weapon in weapons) {

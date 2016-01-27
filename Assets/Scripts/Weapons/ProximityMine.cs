@@ -20,8 +20,6 @@ public class ProximityMine : ProjectileBase {
 	protected override void Update() {
 		timer+=Time.deltaTime;
 
-
-		//if (!triggered  && timer > activationDelay) CheckForProximty();
 		if (timer > activationDelay) CheckForProximty();
 	}
 
@@ -38,26 +36,28 @@ public class ProximityMine : ProjectileBase {
 				inRangeCount++;
 				Debug.DrawLine(go.transform.position, transform.position, Color.red);
 			}
-		
 		}
 
-		if (inRangeCount > 0 && !triggered) DelayExplosion();
+		if (inRangeCount > 0 && !triggered) TriggerExplosion(explositonDelay);
 	}
 
 	bool triggered = false;
-	void DelayExplosion() {
+	void TriggerExplosion(float delay) {
 		Debug.Log("DelayExplosion ");
 
+		if (triggered) return;
+
 		triggered = true;
-		StartCoroutine("Explode");
+		StartCoroutine("Explode", delay);
 	}
 
-	IEnumerator Explode() {
+	IEnumerator Explode(float delay) {
+//		triggered = true;
+		yield return new WaitForSeconds(delay);
 
-		yield return new WaitForSeconds(explositonDelay);
-		Debug.Log("Explode ");
-		GetComponent<SphereCollider>().radius = explosionRadius;
+		Debug.Log("Explode "+delay);
 		GetComponent<SphereCollider>().isTrigger = true;
+		GetComponent<SphereCollider>().radius = explosionRadius;
 
 		yield return new WaitForEndOfFrame();
 
@@ -65,25 +65,21 @@ public class ProximityMine : ProjectileBase {
 	}
 
 	protected override void OnCollisionEnter(Collision collision) {
-		return;
 
-		if (collision.gameObject.tag == "Player") {
-			if (!triggered) GetComponent<SphereCollider>().radius = explosionRadius;
+		Debug.Log("Proxy OnCollisionEnter "+collision.gameObject.name);
 
-			collision.gameObject.GetComponent<LifeController>().TakeDamage(damage);
-
-			Destroy(gameObject);
-		}
+		if (collision.gameObject.tag == "Player" ||
+			collision.gameObject.tag == "Projectile") TriggerExplosion(0);
+			
 	}
 
-	void OnTriggerEnter(Collider collision) {
+	//when the mine is shot at
+	protected override void OnTriggerEnter(Collider other) {
+		Debug.Log("Proxy OnTriggerEnter "+other.gameObject.name);
+		TriggerExplosion(0);
 
-		if (collision.gameObject.tag == "Player") {
-			//if (!triggered) GetComponent<SphereCollider>().radius = explosionRadius;
-
-			collision.gameObject.GetComponent<LifeController>().TakeDamage(damage);
-
+		if (other.gameObject.tag == "Player") {
+			other.gameObject.GetComponent<LifeController>().TakeDamage(damage);
 		}
-
 	}
 }

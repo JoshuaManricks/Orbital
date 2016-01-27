@@ -17,7 +17,7 @@ public class PowerUpSpawner : MonoBehaviour {
 	}
 
 	void SpawnPowerup () {
-		Debug.Log("SpawnPowerup");
+//		Debug.Log("SpawnPowerup");
 
 		GameObject powerup = Instantiate(powerups[Random.Range(0,powerups.Length-1)]);
 

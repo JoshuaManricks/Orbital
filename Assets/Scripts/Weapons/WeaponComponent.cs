@@ -21,10 +21,21 @@ public class WeaponComponent : MonoBehaviour {
 		}
 	}
 
-	public virtual void Fire() {
+	public virtual void Fire(float additionSpeed) {
 
 		foreach (Transform child in firePositions) {
 			
+			ProjectileBase clone = (ProjectileBase)Instantiate(projectile);
+			clone.transform.position = child.position;
+			clone.transform.rotation = child.rotation;
+			clone.owner = transform.parent.parent.gameObject;
+			clone.shipSpeed = additionSpeed;
+		}
+	}
+	public virtual void Fire() {
+
+		foreach (Transform child in firePositions) {
+
 			ProjectileBase clone = (ProjectileBase)Instantiate(projectile);
 			clone.transform.position = child.position;
 			clone.transform.rotation = child.rotation;

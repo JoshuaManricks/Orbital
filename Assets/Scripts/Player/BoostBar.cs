@@ -28,7 +28,7 @@ public class BoostBar : MonoBehaviour {
 
 		boostPercentage = (player.fuel / player.maxFuel);
 
-		transform.localScale = new Vector3(boostPercentage ,1f,1f);
+		transform.localScale = new Vector3(boostPercentage ,1f,0.42f);
 
 		//TODO : optimize this not to trigger every frame
 		if (boostPercentage <= .2){
