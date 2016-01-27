@@ -61,10 +61,14 @@ public class FirstPersonController : MonoBehaviour {
 //		}
 		// Calculate movement:
 		//float inputX = Input.GetAxisRaw("Horizontal");
-		inputY = Input.GetAxisRaw("Vertical_"+playerID);
+		inputY = Input.GetAxisRaw("Vertical_"+playerID)*-1f;
+		inputY = Mathf.Clamp (inputY, 0, 1);
+
+		Debug.Log (inputY);
+
 		if (autoMove)  inputY = 1;
 
-		Vector3 moveDir = new Vector3(0,0, inputY).normalized;
+		Vector3 moveDir = new Vector3(0,0, inputY);//.normalized;
 		Vector3 targetMoveAmount = moveDir * (walkSpeed+boost);
 		moveAmount = Vector3.SmoothDamp(moveAmount,targetMoveAmount,ref smoothMoveVelocity,.15f);
 

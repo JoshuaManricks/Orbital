@@ -53,9 +53,9 @@ public class WeaponControls : MonoBehaviour {
 			if (Input.GetKeyUp (KeyCode.Joystick1Button16))
 				CancelInvoke ("FirePrimary");
 
-			if (Input.GetKeyDown (KeyCode.Joystick1Button17))
+			if (Input.GetKeyDown (KeyCode.Joystick1Button18))
 				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-			if (Input.GetKeyUp (KeyCode.Joystick1Button17))
+			if (Input.GetKeyUp (KeyCode.Joystick1Button18))
 				CancelInvoke ("FireSecondary");
 			
 		} else if (player.playerID == PlayerID.P1) {
