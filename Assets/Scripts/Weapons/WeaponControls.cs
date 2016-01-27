@@ -16,9 +16,11 @@ public class WeaponControls : MonoBehaviour {
 	public WeaponComponent secondaryWeapon;
 
 	FirstPersonController player;
-
+	PowerUpSpawner powerUpSpawner;
 	// Use this for initialization
 	void Start () {
+//		powerUpSpawner = GetComponentsInChildren<PowerUpSpawner>();
+		PowerUpSpawner.PowerUpCollected += powerUpCollected;
 
 		weapons = GetComponentsInChildren<WeaponComponent>();
 
@@ -29,6 +31,14 @@ public class WeaponControls : MonoBehaviour {
 
 		player  = transform.parent.gameObject.GetComponent<FirstPersonController>();
 
+	}
+
+	void powerUpCollected(PowerUpEventData data) {
+		if (data.playerId == player.playerID) {
+			ChangeWeapon (data.type);
+		} else {
+
+		}
 	}
 
 	// Update is called once per frame
@@ -68,7 +78,7 @@ public class WeaponControls : MonoBehaviour {
 
 	void FireSecondary()
 	{
-		secondaryWeapon.Fire();
+		if (secondaryWeapon != null) secondaryWeapon.Fire();
 	}
 
 	public void DisableAllWeapons() {
@@ -82,6 +92,7 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	public void ChangeWeapon(WeaponName newWeapon) {
+		Debug.Log (newWeapon);
 
 		//find weaopn
 		foreach (WeaponComponent weapon in weapons) {

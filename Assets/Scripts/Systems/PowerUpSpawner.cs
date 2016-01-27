@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PowerUpSpawner : MonoBehaviour {
 
+	public delegate void PowerUpEvent(PowerUpEventData data);
+	public static event PowerUpEvent PowerUpCollected;
+
 	public GameObject[] powerups;
 
 	public float spawnTime = 20f;
@@ -25,4 +28,12 @@ public class PowerUpSpawner : MonoBehaviour {
 	void Update () {
 	
 	}
+}
+
+public class PowerUpEventData {
+
+	public WeaponName type;
+	public float amount;
+	public PlayerID playerId;
+
 }

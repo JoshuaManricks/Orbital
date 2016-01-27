@@ -54,7 +54,7 @@ public class WeaponLockOn : MonoBehaviour {
 			Debug.Log("Lost Lock");		
 		}
 
-		Debug.Log("looksing for ship");
+//		Debug.Log("looksing for ship");
 
 		foreach (GameObject ship in gameController.players) {
 

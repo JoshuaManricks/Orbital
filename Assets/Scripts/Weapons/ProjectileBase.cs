@@ -34,11 +34,14 @@ public class ProjectileBase : MonoBehaviour {
 		Vector3 targetMoveAmount = moveDir * speed;
 		moveAmount = targetMoveAmount;
 
+		RayDown ();
+
 	}
 
 	protected virtual void FixedUpdate() {
 		// Apply movement to rigidbody
 		Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
+
 		rigidbody.MovePosition(rigidbody.position + localMove);
 	}
 
@@ -51,6 +54,22 @@ public class ProjectileBase : MonoBehaviour {
 
 			Destroy(gameObject);
 		}
+	}
+
+
+	void RayDown() {
+		// Grounded check
+		Ray ray = new Ray(transform.position, -transform.up);
+		RaycastHit hit;
+
+		if (Physics.Raycast(ray, out hit, 5f)) {
+			Debug.Log (hit.collider.gameObject.name + " : "+hit.distance);
+
+			if (hit.distance > 1.7) down = .2f;
+			else down = 0;
+		}
 
 	}
+
+	float down = 0f;
 }

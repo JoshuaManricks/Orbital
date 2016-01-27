@@ -27,7 +27,7 @@ public class BoostController : MonoBehaviour {
 		isBoosting = false;
 
 		if (player.playerID == PlayerID.P2) {
-			Debug.Log ("b " + Input.GetAxisRaw ("Boost_" + player.playerID));
+//			Debug.Log ("b " + Input.GetAxisRaw ("Boost_" + player.playerID));
 			if (Input.GetAxisRaw ("Boost_" + player.playerID)>0 && fuel > 0 && !blockBoost) isBoosting = true;
 
 		} else {
