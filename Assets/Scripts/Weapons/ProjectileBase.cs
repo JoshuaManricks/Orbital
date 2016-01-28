@@ -58,6 +58,7 @@ public class ProjectileBase : MonoBehaviour {
 			Destroy(gameObject);
 				
 		} else if (collision.gameObject.tag == "Projectile") {
+			Debug.Log("OnCollisionEnter WEAPON");
 			Destroy(gameObject);
 
 		}
@@ -76,7 +77,7 @@ public class ProjectileBase : MonoBehaviour {
 //			Debug.Log("Destroy by WALL");
 
 		} else if (other.gameObject.tag == "Projectile") {
-//			Debug.Log("Destroy by WEAPON");
+			Debug.Log("OnTriggerEnter WEAPON");
 			Destroy(gameObject);
 		} else {
 //			Debug.Log("OnTriggerEnter "+other.gameObject.name);

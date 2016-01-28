@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class WeaponControls : MonoBehaviour {
 
+
+
 	public WeaponName startPrimaryWeapon;
 	public WeaponName startSecondaryWeapon;
 
@@ -46,7 +48,40 @@ public class WeaponControls : MonoBehaviour {
 		if (player.dummy) return;
 
 		// Fire bullet code
+		if (player.shipType == ShipType.Plane) UpdatePlaneControls();
+		else if (player.shipType == ShipType.Tank) UpdateTankControls();
+	}
 
+	public float turretSpeed = 10f;
+	public bool tankFiring = false;
+	void UpdateTankControls() {
+		if (player.playerID == PlayerID.P2) {
+
+			float inputY = Input.GetAxisRaw ("Vertical_" + player.playerID) * -1f;
+			inputY = Mathf.Clamp (inputY, 0, 1);
+
+
+			if (inputY > 0 && !tankFiring) {
+				tankFiring = true;
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			}
+			if (inputY == 0) {
+				tankFiring = false;
+				CancelInvoke ("FirePrimary");
+			}
+
+			if (Input.GetKeyDown (KeyCode.Joystick1Button12))
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			if (Input.GetKeyUp (KeyCode.Joystick1Button12))
+				CancelInvoke ("FireSecondary");
+
+			//rotate turret
+			transform.Rotate(Vector3.up * Input.GetAxisRaw("Turret_"+player.playerID)*turretSpeed);
+
+		}
+	}
+
+	void UpdatePlaneControls() {
 		if (player.playerID == PlayerID.P2) {
 			if (Input.GetKeyDown (KeyCode.Joystick1Button16))
 				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
@@ -57,7 +92,7 @@ public class WeaponControls : MonoBehaviour {
 				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
 			if (Input.GetKeyUp (KeyCode.Joystick1Button18))
 				CancelInvoke ("FireSecondary");
-			
+
 		} else if (player.playerID == PlayerID.P1) {
 			if (Input.GetKeyDown (KeyCode.Q))
 				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
@@ -130,4 +165,9 @@ public enum WeaponName  {
 public enum WeaponGrade  {
 	Primary,
 	Secondary
+}
+
+public enum ShipType  {
+	Plane,
+	Tank
 }

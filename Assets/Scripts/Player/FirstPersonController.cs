@@ -6,6 +6,7 @@ public class FirstPersonController : MonoBehaviour {
 	
 	// public vars
 	public PlayerID playerID;
+	public ShipType shipType;
 	public float mouseSensitivityX = 1;
 	public float mouseSensitivityY = 1;
 	public float walkSpeed = 6;
@@ -51,26 +52,42 @@ public class FirstPersonController : MonoBehaviour {
 		
 		if (isDead || dummy) return;
 
-//		if (!autoMove) {
-		// Look rotation:
-//		transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivityX);
-			transform.Rotate(Vector3.up * Input.GetAxisRaw("Horizontal_"+playerID) * mouseSensitivityX);
-//		verticalLookRotation += Input.GetAxis("Mouse Y") * mouseSensitivityY;
-//		verticalLookRotation = Mathf.Clamp(verticalLookRotation,-60,60);
-//		cameraTransform.localEulerAngles = Vector3.left * verticalLookRotation;
-//		}
-		// Calculate movement:
-		//float inputX = Input.GetAxisRaw("Horizontal");
-		inputY = Input.GetAxisRaw("Vertical_"+playerID)*-1f;
-		inputY = Mathf.Clamp (inputY, 0, 1);
+		if (shipType == ShipType.Plane) {
+			//		if (!autoMove) {
+			// Look rotation:
+			//		transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivityX);
+			transform.Rotate (Vector3.up * Input.GetAxisRaw ("Horizontal_" + playerID) * mouseSensitivityX);
+			//		verticalLookRotation += Input.GetAxis("Mouse Y") * mouseSensitivityY;
+			//		verticalLookRotation = Mathf.Clamp(verticalLookRotation,-60,60);
+			//		cameraTransform.localEulerAngles = Vector3.left * verticalLookRotation;
+			//		}
+			// Calculate movement:
+			//float inputX = Input.GetAxisRaw("Horizontal");
+			inputY = Input.GetAxisRaw ("Vertical_" + playerID) * -1f;
+			inputY = Mathf.Clamp (inputY, 0, 1);
 
-		Debug.Log (inputY);
+			//		Debug.Log (inputY);
 
-		if (autoMove)  inputY = 1;
+			if (autoMove)
+				inputY = 1;
 
-		Vector3 moveDir = new Vector3(0,0, inputY);//.normalized;
-		Vector3 targetMoveAmount = moveDir * (walkSpeed+boost);
-		moveAmount = Vector3.SmoothDamp(moveAmount,targetMoveAmount,ref smoothMoveVelocity,.15f);
+			Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
+			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
+			moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+
+		} else if (shipType == ShipType.Tank) {
+			transform.Rotate (Vector3.up * Input.GetAxisRaw ("TankTurn_" + playerID) * mouseSensitivityX);
+
+			inputY = Input.GetAxisRaw ("TankAccelerate_" + playerID);
+
+			Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
+			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
+			moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+
+		}
+
+
+
 
 
 		// Jump
