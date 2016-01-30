@@ -26,7 +26,7 @@ public class LifeBar : MonoBehaviour {
 
 	void Update () {
 
-		lifePercentage = (playerLife.life / playerLife.maxLife);
+		lifePercentage = (playerLife.currentLife / playerLife.maxLife);
 
 		transform.localScale = new Vector3(lifePercentage ,1f,1f);
 

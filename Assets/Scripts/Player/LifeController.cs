@@ -4,7 +4,7 @@ using System.Collections;
 public class LifeController : MonoBehaviour {
 
 	public float maxLife;
-	public float life;
+	public float currentLife;
 	FirstPersonController player;
 
 
@@ -21,9 +21,9 @@ public class LifeController : MonoBehaviour {
 	public void TakeDamage(float damage) {
 		Debug.Log(gameObject.name + " TakeDamage "+damage);
 
-		life = Mathf.Clamp(life - damage, 0, maxLife);
+		currentLife = Mathf.Clamp(currentLife - damage, 0, maxLife);
 
-		if (life == 0) {
+		if (currentLife == 0) {
 			player.DestroyShip();
 
 			Explode();
@@ -46,7 +46,7 @@ public class LifeController : MonoBehaviour {
 
 	public void Heal(float heal) {
 
-		life = Mathf.Clamp(life + heal, 0, maxLife);
+		currentLife = Mathf.Clamp(currentLife + heal, 0, maxLife);
 
 	}
 }
