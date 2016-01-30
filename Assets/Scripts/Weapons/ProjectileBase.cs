@@ -7,10 +7,11 @@ public class ProjectileBase : MonoBehaviour {
 	// public vars
 	public float damage;
 	public float speed = 6;
+	[HideInInspector]
 	public float shipSpeed = 0;
 	public float lifeTime = 1;
 
-	public float collisionOffsetTime = .1f;
+	float collisionOffsetTime = .1f;
 
 	protected float timer = 0;
 
@@ -19,6 +20,7 @@ public class ProjectileBase : MonoBehaviour {
 	protected Vector3 smoothMoveVelocity;
 	protected Rigidbody rigidbody;
 
+	[HideInInspector]
 	public FirstPersonController owner;
 
 	void Awake() {

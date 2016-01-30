@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class WeaponControls : MonoBehaviour {
 
-
-
 	public WeaponName startPrimaryWeapon;
 	public WeaponName startSecondaryWeapon;
 
@@ -17,21 +15,24 @@ public class WeaponControls : MonoBehaviour {
 	public WeaponComponent primaryWeapon;
 	public WeaponComponent secondaryWeapon;
 
-	FirstPersonController player;
+	public FirstPersonController player;
 	PowerUpSpawner powerUpSpawner;
+
+	public SpecialWeaponsBar weaponsBar;
+
 	// Use this for initialization
 	void Start () {
-//		powerUpSpawner = GetComponentsInChildren<PowerUpSpawner>();
 		PowerUpSpawner.PowerUpCollected += powerUpCollected;
 
 		weapons = GetComponentsInChildren<WeaponComponent>();
 
 		DisableAllWeapons();
 
-		ChangeWeapon(startPrimaryWeapon);
-		ChangeWeapon(startSecondaryWeapon);
-
 		player  = transform.parent.gameObject.GetComponent<FirstPersonController>();
+		weaponsBar  = player.GetComponentInChildren<SpecialWeaponsBar>();
+
+		ChangeWeapon(startPrimaryWeapon);
+		ChangeWeapon(startSecondaryWeapon, 5);
 
 	}
 
@@ -50,16 +51,43 @@ public class WeaponControls : MonoBehaviour {
 		// Fire bullet code
 		if (player.shipType == ShipType.Plane) UpdatePlaneControls();
 		else if (player.shipType == ShipType.Tank) UpdateTankControls();
+		else if (player.shipType == ShipType.Strafe) UpdateStrafeControls();
 	}
 
 	public float turretSpeed = 10f;
 	public bool tankFiring = false;
 	void UpdateTankControls() {
-		if (player.playerID == PlayerID.P2) {
+		float inputY = Input.GetAxisRaw ("Vertical_" + player.playerID) * -1f;
+		inputY = Mathf.Clamp (inputY, 0, 1);
 
+
+		if (inputY > 0 && !tankFiring) {
+			tankFiring = true;
+			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+		}
+		if (inputY == 0) {
+			tankFiring = false;
+			CancelInvoke ("FirePrimary");
+		}
+
+		if (Input.GetKeyDown (KeyCode.Joystick1Button12))
+			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+		if (Input.GetKeyUp (KeyCode.Joystick1Button12))
+			CancelInvoke ("FireSecondary");
+
+		//rotate turret
+		float x = Input.GetAxisRaw("TurretX_" + player.playerID);
+		float y = Input.GetAxisRaw("TurretY_" + player.playerID);
+		if (x != 0.0f || y != 0.0f) {
+			float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
+			angle += 90f;
+			transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.AngleAxis (angle, Vector3.up), .1f);
+		}
+	}
+
+	void UpdateStrafeControls() {
 			float inputY = Input.GetAxisRaw ("Vertical_" + player.playerID) * -1f;
 			inputY = Mathf.Clamp (inputY, 0, 1);
-
 
 			if (inputY > 0 && !tankFiring) {
 				tankFiring = true;
@@ -74,19 +102,7 @@ public class WeaponControls : MonoBehaviour {
 				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
 			if (Input.GetKeyUp (KeyCode.Joystick1Button12))
 				CancelInvoke ("FireSecondary");
-
-			//rotate turret
-			float x = Input.GetAxisRaw("TurretX_" + player.playerID);
-			float y = Input.GetAxisRaw("TurretY_" + player.playerID);
-			if (x != 0.0f || y != 0.0f) {
-				float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
-				angle += 90f;
-				transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.AngleAxis (angle, Vector3.up), .1f);
-
-
-			}
-
-		}
+			
 	}
 
 	void UpdatePlaneControls() {
@@ -119,19 +135,49 @@ public class WeaponControls : MonoBehaviour {
 		primaryWeapon.Fire((player.walkSpeed+player.boost)*player.inputY, player);
 	}
 
-	void FireSecondary()
-	{
-		if (secondaryWeapon != null) secondaryWeapon.Fire(player);
+	void FireSecondary() {
+		if (secondaryWeapon != null
+			&& weaponsBar.currentShots > 0
+			&& secondaryWeapon.canFire) {
+
+			secondaryWeapon.Fire (player);
+			weaponsBar.UseShot ();
+
+			//check for remaining ammo
+			if (weaponsBar.currentShots == 0) {
+				secondaryWeapon.gameObject.SetActive(false);
+			}
+		}
 	}
 
 	public void DisableAllWeapons() {
-		
 		foreach (WeaponComponent weapon in weapons) {
-
 			weapon.gameObject.SetActive(false);
-
 		}
+	}
 
+	public void ChangeWeapon(WeaponName newWeapon, int amountOfAmmo) {
+		//find weaopn
+		foreach (WeaponComponent weapon in weapons) {
+			if (weapon.name == newWeapon) {
+
+				if (weapon.grade == WeaponGrade.Primary) {
+					if (primaryWeapon) primaryWeapon.gameObject.SetActive(false);
+					primaryWeapon = weapon;
+					primaryWeapon.gameObject.SetActive(true);
+				}
+
+				if (weapon.grade == WeaponGrade.Secondary) {
+					if (secondaryWeapon) secondaryWeapon.gameObject.SetActive(false);
+					secondaryWeapon = weapon;
+					secondaryWeapon.gameObject.SetActive(true);
+
+					weaponsBar.SetShots (amountOfAmmo);
+				}
+
+				return;
+			}
+		}
 	}
 
 	public void ChangeWeapon(WeaponName newWeapon) {
@@ -150,7 +196,7 @@ public class WeaponControls : MonoBehaviour {
 					secondaryWeapon = weapon;
 					secondaryWeapon.gameObject.SetActive(true);
 				}
-
+				return;
 			}
 		}
 	}
@@ -173,5 +219,6 @@ public enum WeaponGrade  {
 
 public enum ShipType  {
 	Plane,
-	Tank
+	Tank,
+	Strafe
 }

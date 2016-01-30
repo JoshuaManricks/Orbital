@@ -68,8 +68,7 @@ public class FirstPersonController : MonoBehaviour {
 
 			//		Debug.Log (inputY);
 
-			if (autoMove)
-				inputY = 1;
+			if (autoMove) inputY = 1;
 
 			Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
 			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
@@ -84,10 +83,16 @@ public class FirstPersonController : MonoBehaviour {
 			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
 			moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
 
+		} else if (shipType == ShipType.Strafe) {
+			transform.Rotate (Vector3.up * Input.GetAxisRaw ("TankTurn_" + playerID) * mouseSensitivityX);
+
+			inputY = Input.GetAxisRaw ("TankAccelerate_" + playerID);
+
+			Vector3 moveDir = new Vector3 (Input.GetAxisRaw("TurretX_" + playerID), 0, inputY);//.normalized;
+			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
+			moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+
 		}
-
-
-
 
 
 		// Jump
