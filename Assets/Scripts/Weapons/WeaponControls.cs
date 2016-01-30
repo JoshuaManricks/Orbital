@@ -81,7 +81,9 @@ public class WeaponControls : MonoBehaviour {
 			if (x != 0.0f || y != 0.0f) {
 				float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
 				angle += 90f;
-				transform.rotation = Quaternion.AngleAxis (angle, Vector3.up);
+				transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.AngleAxis (angle, Vector3.up), .1f);
+
+
 			}
 
 		}
