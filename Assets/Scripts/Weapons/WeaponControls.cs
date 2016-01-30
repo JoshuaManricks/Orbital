@@ -76,7 +76,13 @@ public class WeaponControls : MonoBehaviour {
 				CancelInvoke ("FireSecondary");
 
 			//rotate turret
-			transform.Rotate(Vector3.up * Input.GetAxisRaw("Turret_"+player.playerID)*turretSpeed);
+			float x = Input.GetAxisRaw("TurretX_" + player.playerID);
+			float y = Input.GetAxisRaw("TurretY_" + player.playerID);
+			if (x != 0.0f || y != 0.0f) {
+				float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
+				angle += 90f;
+				transform.rotation = Quaternion.AngleAxis (angle, Vector3.up);
+			}
 
 		}
 	}
@@ -108,12 +114,12 @@ public class WeaponControls : MonoBehaviour {
 
 	void FirePrimary()
 	{
-		primaryWeapon.Fire((player.walkSpeed+player.boost)*player.inputY);
+		primaryWeapon.Fire((player.walkSpeed+player.boost)*player.inputY, player);
 	}
 
 	void FireSecondary()
 	{
-		if (secondaryWeapon != null) secondaryWeapon.Fire();
+		if (secondaryWeapon != null) secondaryWeapon.Fire(player);
 	}
 
 	public void DisableAllWeapons() {
@@ -127,18 +133,16 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	public void ChangeWeapon(WeaponName newWeapon) {
-//		Debug.Log (newWeapon);
-
 		//find weaopn
 		foreach (WeaponComponent weapon in weapons) {
 			if (weapon.name == newWeapon) {
 
 				if (weapon.grade == WeaponGrade.Primary) {
-					
 					if (primaryWeapon) primaryWeapon.gameObject.SetActive(false);
 					primaryWeapon = weapon;
 					primaryWeapon.gameObject.SetActive(true);
 				}
+
 				if (weapon.grade == WeaponGrade.Secondary) {
 					if (secondaryWeapon) secondaryWeapon.gameObject.SetActive(false);
 					secondaryWeapon = weapon;
@@ -147,9 +151,7 @@ public class WeaponControls : MonoBehaviour {
 
 			}
 		}
-
 	}
-
 }
 
 public enum WeaponName  {
