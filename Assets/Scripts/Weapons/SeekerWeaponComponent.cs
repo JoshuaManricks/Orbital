@@ -6,7 +6,7 @@ public class SeekerWeaponComponent : WeaponComponent {
 
 
 
-	public override void Fire() {
+	public override void Fire(FirstPersonController player) {
 		
 		if (GetComponent<WeaponLockOn>().lockedShip == null) return;
 
@@ -19,6 +19,8 @@ public class SeekerWeaponComponent : WeaponComponent {
 			Debug.Log("clone.target "+clone.target);
 
 			clone.target = GetComponent<WeaponLockOn>().lockedShip.transform;
+
+			clone.owner = player;
 
 			Debug.Log("clone.target "+clone.target);
 

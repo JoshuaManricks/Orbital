@@ -19,7 +19,7 @@ public class ProjectileBase : MonoBehaviour {
 	protected Vector3 smoothMoveVelocity;
 	protected Rigidbody rigidbody;
 
-	public GameObject owner;
+	public FirstPersonController owner;
 
 	void Awake() {
 		rigidbody = GetComponent<Rigidbody> ();
@@ -47,7 +47,7 @@ public class ProjectileBase : MonoBehaviour {
 	}
 
 	protected virtual void OnCollisionEnter(Collision collision) {
-		if (timer < collisionOffsetTime) return;
+		if (timer < collisionOffsetTime && collision.gameObject == owner.gameObject) return;
 
 		if (collision.gameObject.tag == "Player") {
 //			Debug.Log(collision.gameObject.name);
@@ -65,7 +65,7 @@ public class ProjectileBase : MonoBehaviour {
 	}
 
 	protected virtual void OnTriggerEnter(Collider other) {
-		if (timer < collisionOffsetTime) return;
+		if (timer < collisionOffsetTime && other.gameObject == owner.gameObject) return;
 
 		if (other.gameObject.tag == "Player") {
 //			Debug.Log(other.gameObject.name);
