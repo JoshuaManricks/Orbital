@@ -23,5 +23,6 @@ public class PowerUp : MonoBehaviour {
 
 public enum PowerUpType {
 	Boost,
-	Weapon
+	Weapon,
+	Repair
 }

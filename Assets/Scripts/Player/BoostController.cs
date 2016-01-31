@@ -24,6 +24,7 @@ public class BoostController : MonoBehaviour {
 
 	bool isBoosting = false;
 	float boostInput;
+
 	// Update is called once per frame
 	void Update () {
 		isBoosting = false;
@@ -72,8 +73,7 @@ public class BoostController : MonoBehaviour {
 			if (fuel > 3f) blockBoost = false;
 			else blockBoost = true;
 		}
-
-
+			
 	}
 
 
