@@ -30,12 +30,14 @@ public class PlayerConfig : MonoBehaviour {
 	void ConfigureCamera(int playerCount) {
 
 		if (playerCount > 2 ) {
+			if (playerController.playerID == PlayerID.P1) camera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
+			if (playerController.playerID == PlayerID.P2) camera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+			if (playerController.playerID == PlayerID.P3) camera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+			if (playerController.playerID == PlayerID.P4) camera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
 
 		} else {
-			if (playerController.playerID == PlayerID.P1) camera.rect = new Rect(0f,0f,0.5f,1f);
-			if (playerController.playerID == PlayerID.P2) camera.rect = new Rect(0.5f,0f,0.5f,1f);
-//			if (playerController.playerID == PlayerID.P1) camera.rect = new Rect(0f,0f,0.5f,0.5f);
-
+			if (playerController.playerID == PlayerID.P1) camera.rect = new Rect(0.0f, 0.0f, 0.5f, 1.0f);
+			if (playerController.playerID == PlayerID.P2) camera.rect = new Rect(0.5f, 0.0f, 0.5f, 1.0f);
 		}
 
 	}
