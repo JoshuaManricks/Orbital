@@ -34,7 +34,7 @@ public class WeaponControls : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		PowerUpSpawner.PowerUpCollected += powerUpCollected;
+//		PowerUpSpawner.PowerUpCollected += powerUpCollected;
 
 		weapons = GetComponentsInChildren<WeaponComponent>();
 

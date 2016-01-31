@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PowerUpSpawner : MonoBehaviour {
 
-	public delegate void PowerUpEvent(PowerUpEventData data);
-	public static event PowerUpEvent PowerUpCollected;
+//	public delegate void PowerUpEvent(PowerUpEventData data);
+//	public static event PowerUpEvent PowerUpCollected;
 
 	public GameObject[] powerups;
 
