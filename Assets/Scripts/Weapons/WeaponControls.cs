@@ -146,7 +146,7 @@ public class WeaponControls : MonoBehaviour {
 
 	void FirePrimary()
 	{
-		primaryWeapon.Fire((player.walkSpeed+player.boost)*player.inputY, player);
+		primaryWeapon.Fire((player.movementSpeed+player.boostModifier)*player.inputY, player);
 	}
 
 	void FireSecondary() {

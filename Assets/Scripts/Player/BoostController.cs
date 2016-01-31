@@ -27,6 +27,8 @@ public class BoostController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (player.dummy) return;
+
 		isBoosting = false;
 
 		boostInput = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_left);
@@ -59,7 +61,7 @@ public class BoostController : MonoBehaviour {
 			fuel -= depletionRate;
 			fuel = Mathf.Clamp(fuel, 0, maxFuel);
 			//increase player speed
-			player.boost = speedIncrease;
+			player.boostModifier = speedIncrease;
 			trail.enabled = true;
 
 		} else {
@@ -67,7 +69,7 @@ public class BoostController : MonoBehaviour {
 			fuel += regenRate;
 			fuel = Mathf.Clamp(fuel, 0, maxFuel);
 			//set player speed back to normal
-			player.boost = 0;
+			player.boostModifier = 0;
 			trail.enabled = false;
 
 			if (fuel > 3f) blockBoost = false;

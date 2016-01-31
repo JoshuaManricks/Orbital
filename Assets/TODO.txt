@@ -1,0 +1,39 @@
+- primary fire wont stop
+
+- environmental hazards
+
+- cloaking
+- 
+
+
+
+KEYBOARD SETTINGS
+
+
+ThumbLeft_x
+ThumbLeft_y
+ThumbLeft
+
+ThumbRight_x
+ThumbRight_y
+ThumbRight
+
+
+ShoulderTop_left
+ShoulderTop_right
+
+ShoulderBottom_left
+ShoulderBottom_right
+
+Interface_left
+Interface_right
+
+dpad_up
+dpad_down
+dpad_left
+dpad_right
+
+FP_top
+FP_down
+FP_left
+FP_right
