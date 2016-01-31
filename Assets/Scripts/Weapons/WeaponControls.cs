@@ -11,15 +11,26 @@ public class WeaponControls : MonoBehaviour {
 	public float primaryInterval = 0.1f;
 	public float secondaryInterval = 2f;
 
+	[HideInInspector]
 	public WeaponComponent[] weapons;
 
+	[HideInInspector]
 	public WeaponComponent primaryWeapon;
+	[HideInInspector]
 	public WeaponComponent secondaryWeapon;
 
 	public FirstPersonController player;
 	PowerUpSpawner powerUpSpawner;
 
 	public SpecialWeaponsBar weaponsBar;
+
+	public float turretSpeed = 10f;
+
+//	[HideInInspector]
+	public bool isPrimaryFiring = false;
+//	[HideInInspector]
+	public bool isSecondaryFiring = false;
+
 
 	// Use this for initialization
 	void Start () {
@@ -58,12 +69,18 @@ public class WeaponControls : MonoBehaviour {
 
 	}
 
-	public float turretSpeed = 10f;
-	[HideInInspector]
-	public bool isPrimaryFiring = false;
-
-	public bool isSecondaryFiring = false;
 	void UpdateTankControls() {
+
+		//rotate turret
+		float x = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_x);
+		float y = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_y);
+		if (x != 0.0f || y != 0.0f) {
+			float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
+			angle += 90f;
+			transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.AngleAxis (angle, Vector3.up), .1f);
+		}
+
+		//fire weapons
 		float inputY = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
 		inputY = Mathf.Clamp (inputY, 0, 1);
 
@@ -84,14 +101,6 @@ public class WeaponControls : MonoBehaviour {
 			isSecondaryFiring = false;
 		}
 
-		//rotate turret
-		float x = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_x);
-		float y = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_y);
-		if (x != 0.0f || y != 0.0f) {
-			float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
-			angle += 90f;
-			transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.AngleAxis (angle, Vector3.up), .1f);
-		}
 	}
 
 	void UpdateStrafeControls() {
@@ -129,7 +138,7 @@ public class WeaponControls : MonoBehaviour {
 		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 1f && !isSecondaryFiring) {
 			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
 			isSecondaryFiring = true;
-		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 0f && !isSecondaryFiring) {
+		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 0f && isSecondaryFiring) {
 			CancelInvoke ("FireSecondary");
 			isSecondaryFiring = false;
 		}
