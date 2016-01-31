@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using InputPlusControl;
 
 public class WeaponControls : MonoBehaviour {
 
@@ -34,6 +35,8 @@ public class WeaponControls : MonoBehaviour {
 		ChangeWeapon(startPrimaryWeapon);
 		ChangeWeapon(startSecondaryWeapon, 5);
 
+//		Debug.Log ("BUTTON " +InputPlus.GetData (1, ControllerVarEnum.ThumbRight));
+
 	}
 
 	void powerUpCollected(PowerUpEventData data) {
@@ -52,32 +55,38 @@ public class WeaponControls : MonoBehaviour {
 		if (player.shipType == ShipType.Plane) UpdatePlaneControls();
 		else if (player.shipType == ShipType.Tank) UpdateTankControls();
 		else if (player.shipType == ShipType.Strafe) UpdateStrafeControls();
+
 	}
 
 	public float turretSpeed = 10f;
-	public bool tankFiring = false;
+	[HideInInspector]
+	public bool isPrimaryFiring = false;
+
+	public bool isSecondaryFiring = false;
 	void UpdateTankControls() {
-		float inputY = Input.GetAxisRaw ("Vertical_" + player.playerID) * -1f;
+		float inputY = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
 		inputY = Mathf.Clamp (inputY, 0, 1);
 
-
-		if (inputY > 0 && !tankFiring) {
-			tankFiring = true;
+		if (inputY > 0 && !isPrimaryFiring) {
+			isPrimaryFiring = true;
 			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
-		}
-		if (inputY == 0) {
-			tankFiring = false;
+
+		} else if (inputY == 0 && isPrimaryFiring) {
+			isPrimaryFiring = false;
 			CancelInvoke ("FirePrimary");
 		}
 
-		if (Input.GetKeyDown (KeyCode.Joystick1Button12))
+		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 1f && !isSecondaryFiring) {
 			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-		if (Input.GetKeyUp (KeyCode.Joystick1Button12))
+			isSecondaryFiring = true;
+		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 0f && isSecondaryFiring) {
 			CancelInvoke ("FireSecondary");
+			isSecondaryFiring = false;
+		}
 
 		//rotate turret
-		float x = Input.GetAxisRaw("TurretX_" + player.playerID);
-		float y = Input.GetAxisRaw("TurretY_" + player.playerID);
+		float x = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_x);
+		float y = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_y);
 		if (x != 0.0f || y != 0.0f) {
 			float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
 			angle += 90f;
@@ -86,47 +95,43 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	void UpdateStrafeControls() {
-			float inputY = Input.GetAxisRaw ("Vertical_" + player.playerID) * -1f;
-			inputY = Mathf.Clamp (inputY, 0, 1);
+		float inputY = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
+		inputY = Mathf.Clamp (inputY, 0, 1);
 
-			if (inputY > 0 && !tankFiring) {
-				tankFiring = true;
-				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
-			}
-			if (inputY == 0) {
-				tankFiring = false;
-				CancelInvoke ("FirePrimary");
-			}
+		if (inputY > 0 && !isPrimaryFiring) {
+			isPrimaryFiring = true;
+			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+		} else if (inputY == 0 && isPrimaryFiring) {
+			isPrimaryFiring = false;
+			CancelInvoke ("FirePrimary");
+		}
 
-			if (Input.GetKeyDown (KeyCode.Joystick1Button12))
-				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-			if (Input.GetKeyUp (KeyCode.Joystick1Button12))
-				CancelInvoke ("FireSecondary");
+		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 1f && !isSecondaryFiring) {
+			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			isSecondaryFiring = true;
+		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 0f && isSecondaryFiring) {
+			CancelInvoke ("FireSecondary");
+			isSecondaryFiring = false;
+		}
 			
 	}
 
 	void UpdatePlaneControls() {
-		if (player.playerID == PlayerID.P2) {
-			if (Input.GetKeyDown (KeyCode.Joystick1Button16))
-				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
-			if (Input.GetKeyUp (KeyCode.Joystick1Button16))
-				CancelInvoke ("FirePrimary");
 
-			if (Input.GetKeyDown (KeyCode.Joystick1Button18))
-				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-			if (Input.GetKeyUp (KeyCode.Joystick1Button18))
-				CancelInvoke ("FireSecondary");
+		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_bottom) == 1f && !isPrimaryFiring) {
+			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			isPrimaryFiring = true;
+		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_bottom) == 0f && isPrimaryFiring) {
+			CancelInvoke ("FirePrimary");
+			isPrimaryFiring = false;
+		}
 
-		} else if (player.playerID == PlayerID.P1) {
-			if (Input.GetKeyDown (KeyCode.Q))
-				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
-			if (Input.GetKeyUp (KeyCode.Q))
-				CancelInvoke ("FirePrimary");
-
-			if (Input.GetKeyDown (KeyCode.E))
-				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-			if (Input.GetKeyUp (KeyCode.E))
-				CancelInvoke ("FireSecondary");
+		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 1f && !isSecondaryFiring) {
+			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			isSecondaryFiring = true;
+		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 0f && !isSecondaryFiring) {
+			CancelInvoke ("FireSecondary");
+			isSecondaryFiring = false;
 		}
 	}
 

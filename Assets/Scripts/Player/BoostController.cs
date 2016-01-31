@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InputPlusControl;
 
 public class BoostController : MonoBehaviour {
 
@@ -22,21 +23,34 @@ public class BoostController : MonoBehaviour {
 	}
 
 	bool isBoosting = false;
+	float boostInput;
 	// Update is called once per frame
 	void Update () {
 		isBoosting = false;
 
-		if (player.playerID == PlayerID.P2) {
-//			Debug.Log ("b " + Input.GetAxisRaw ("Boost_" + player.playerID));
-			if (Input.GetAxisRaw ("Boost_" + player.playerID)>0 && fuel > 0 && !blockBoost) isBoosting = true;
+		boostInput = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_left);
+		boostInput = Mathf.Clamp (boostInput, 0, 1);
 
-		} else {
-			if (Input.GetButton ("Boost_" + player.playerID) && fuel > 0 && !blockBoost)  isBoosting = true;
+		if (boostInput > 0 && fuel > 0 && !blockBoost) isBoosting = true;
 
-		}
+//		if (player.shipType == ShipType.Plane) {
+//
+//			boostInput = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
+//			boostInput = Mathf.Clamp (boostInput, 0, 1);
+//
+//			if (boostInput > 0 && fuel > 0 && !blockBoost) isBoosting = true;
+//
+//		} else if (player.shipType == ShipType.Tank) {
+//			boostInput = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_left);
+//			boostInput = Mathf.Clamp (boostInput, 0, 1);
+//
+//			if (boostInput > 0 && fuel > 0 && !blockBoost) isBoosting = true;
+//
+//		} else if (player.shipType == ShipType.Strafe) {
+//
+//
+//		}
 
-
-		
 			
 		//if (Input.GetButton("Boost_"+player.playerID) && fuel > 0 && !blockBoost) {
 		if (isBoosting) {

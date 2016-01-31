@@ -24,8 +24,6 @@ public class SpecialWeaponsBar : MonoBehaviour {
 	public void UseShot () {
 		currentShots --;
 		nodes [currentShots].SetActive(false);
-
-		Debug.Log ("currentShots "+currentShots);
 	}
 
 	void Update () {

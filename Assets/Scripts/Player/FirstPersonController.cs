@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InputPlusControl;
 
 [RequireComponent (typeof (GravityBody))]
 public class FirstPersonController : MonoBehaviour {
 	
 	// public vars
 	public PlayerID playerID;
+	[HideInInspector]
+	public int controllerID;
+
 	public ShipType shipType;
 	public float mouseSensitivityX = 1;
 	public float mouseSensitivityY = 1;
@@ -16,7 +20,7 @@ public class FirstPersonController : MonoBehaviour {
 	public float boost = 0f;
 
 	public bool dummy = false;
-	public bool autoMove = false;
+//	public bool autoMove = false;
 	public float inputY;
 
 	public bool isDead = false;
@@ -35,9 +39,6 @@ public class FirstPersonController : MonoBehaviour {
 	Rigidbody rigidbody;
 	
 	void Awake() {
-		//Cursor.lockState = CursorLockMode.Locked;
-		//Cursor.visible = false;
-		//cameraTransform = Camera.main.transform;
 		rigidbody = GetComponent<Rigidbody> ();
 
 		if (dummy) {
@@ -46,6 +47,8 @@ public class FirstPersonController : MonoBehaviour {
 
 		weaponControls = GetComponentInChildren<WeaponControls>();
 		gameController = FindObjectOfType<GameController>();
+
+		SetupController ();
 	}
 
 	void Update() {
@@ -53,44 +56,13 @@ public class FirstPersonController : MonoBehaviour {
 		if (isDead || dummy) return;
 
 		if (shipType == ShipType.Plane) {
-			//		if (!autoMove) {
-			// Look rotation:
-			//		transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivityX);
-			transform.Rotate (Vector3.up * Input.GetAxisRaw ("Horizontal_" + playerID) * mouseSensitivityX);
-			//		verticalLookRotation += Input.GetAxis("Mouse Y") * mouseSensitivityY;
-			//		verticalLookRotation = Mathf.Clamp(verticalLookRotation,-60,60);
-			//		cameraTransform.localEulerAngles = Vector3.left * verticalLookRotation;
-			//		}
-			// Calculate movement:
-			//float inputX = Input.GetAxisRaw("Horizontal");
-			inputY = Input.GetAxisRaw ("Vertical_" + playerID) * -1f;
-			inputY = Mathf.Clamp (inputY, 0, 1);
-
-			//		Debug.Log (inputY);
-
-			if (autoMove) inputY = 1;
-
-			Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
-			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
-			moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+			MovePlane ();
 
 		} else if (shipType == ShipType.Tank) {
-			transform.Rotate (Vector3.up * Input.GetAxisRaw ("TankTurn_" + playerID) * mouseSensitivityX);
-
-			inputY = Input.GetAxisRaw ("TankAccelerate_" + playerID);
-
-			Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
-			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
-			moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+			MoveTank ();
 
 		} else if (shipType == ShipType.Strafe) {
-			transform.Rotate (Vector3.up * Input.GetAxisRaw ("TankTurn_" + playerID) * mouseSensitivityX);
-
-			inputY = Input.GetAxisRaw ("TankAccelerate_" + playerID);
-
-			Vector3 moveDir = new Vector3 (Input.GetAxisRaw("TurretX_" + playerID), 0, inputY);//.normalized;
-			Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
-			moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+			MoveStrafe ();
 
 		}
 
@@ -112,6 +84,39 @@ public class FirstPersonController : MonoBehaviour {
 			grounded = false;
 		}*/
 		
+	}
+
+	void MovePlane() {
+
+//		transform.Rotate (Vector3.up * Input.GetAxisRaw ("Horizontal_" + playerID) * mouseSensitivityX);
+		transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * mouseSensitivityX);
+
+		inputY = InputPlus.GetData (controllerID, ControllerVarEnum.ShoulderBottom_right);//Input.GetAxisRaw ("Vertical_" + playerID) * -1f;
+		inputY = Mathf.Clamp (inputY, 0, 1);
+
+		Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
+		Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
+		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+	}
+
+	void MoveTank() {
+		transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * mouseSensitivityX);
+
+		Vector3 moveDir = new Vector3 (0, 0, InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_y)*-1);//.normalized;
+		Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
+		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+	}
+
+	void MoveStrafe() {
+		//rotate ship
+		transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * mouseSensitivityX);
+
+		//move direction
+		Vector3 moveDir = new Vector3 (	InputPlus.GetData (controllerID, ControllerVarEnum.ThumbRight_x),
+										0,
+										InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_y) * -1);//.normalized;
+		Vector3 targetMoveAmount = moveDir * (walkSpeed + boost);
+		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
 	}
 	
 	void FixedUpdate() {
@@ -144,9 +149,25 @@ public class FirstPersonController : MonoBehaviour {
 		yield return new WaitForSeconds(gameController.spawnDelay-0.5f);
 		Destroy(gameObject);
 	}
+
+
+	void SetupController() {
+		switch (playerID) {
+		case PlayerID.P1:
+				controllerID = 1;
+			return;
+			case PlayerID.P2:
+				controllerID = 2;
+			return;
+			case PlayerID.P3:
+				controllerID = 3;
+			return;
+			case PlayerID.P4:
+				controllerID = 4;
+			return;
+		}
+	}
 }
-
-
 
 public enum PlayerID  {
 	P1,
