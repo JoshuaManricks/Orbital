@@ -163,13 +163,13 @@ public class FirstPersonController : MonoBehaviour {
 
 			//ROTATION
 			float rotate = 0;
-			if (Input.GetKey(KeyCode.LeftArrow)) rotate  = 1;
-			if (Input.GetKey(KeyCode.RightArrow)) rotate  = -1;
+			if (Input.GetKey(KeyCode.LeftArrow)) rotate  = -1;
+			if (Input.GetKey(KeyCode.RightArrow)) rotate  = 1;
 			transform.Rotate (Vector3.up * rotate * rotateSpeed);
 
 			//STRAFE LEFT OR RIGHT ...
-			var strafe = Input.GetKey(KeyCode.A) ? 1 : 0;
-			if (strafe ==0) strafe = Input.GetKey(KeyCode.D) ? -1 : 0;
+			var strafe = Input.GetKey(KeyCode.A) ? -1 : 0;
+			if (strafe ==0) strafe = Input.GetKey(KeyCode.D) ? 1 : 0;
 
 			//move direction
 			moveDir = new Vector3 (	strafe,

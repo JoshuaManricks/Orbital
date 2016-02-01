@@ -46,8 +46,6 @@ public class WeaponControls : MonoBehaviour {
 		ChangeWeapon(startPrimaryWeapon);
 		ChangeWeapon(startSecondaryWeapon, 5);
 
-//		Debug.Log ("BUTTON " +InputPlus.GetData (1, ControllerVarEnum.ThumbRight));
-
 	}
 
 	void powerUpCollected(PowerUpEventData data) {
@@ -104,25 +102,44 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	void UpdateStrafeControls() {
-		float inputY = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
-		inputY = Mathf.Clamp (inputY, 0, 1);
 
-		if (inputY > 0 && !isPrimaryFiring) {
-			isPrimaryFiring = true;
-			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
-		} else if (inputY == 0 && isPrimaryFiring) {
-			isPrimaryFiring = false;
-			CancelInvoke ("FirePrimary");
+		if (player.useKeyboard) {
+			if (Input.GetKeyDown(KeyCode.W)) {
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			} else if (Input.GetKeyUp(KeyCode.W)) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FirePrimary");
+			}
+
+			if (Input.GetKeyDown(KeyCode.E)) {
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			} else if (Input.GetKeyUp(KeyCode.E)) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FireSecondary");
+			}
+
+
+		} else {
+			float primaryFireButton = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
+			primaryFireButton = Mathf.Clamp (primaryFireButton, 0, 1);
+
+			if (primaryFireButton > 0 && !isPrimaryFiring) {
+				isPrimaryFiring = true;
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			} else if (primaryFireButton == 0 && isPrimaryFiring) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FirePrimary");
+			}
+
+			if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 1f && !isSecondaryFiring) {
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+				isSecondaryFiring = true;
+			} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 0f && isSecondaryFiring) {
+				CancelInvoke ("FireSecondary");
+				isSecondaryFiring = false;
+			}
 		}
 
-		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 1f && !isSecondaryFiring) {
-			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-			isSecondaryFiring = true;
-		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 0f && isSecondaryFiring) {
-			CancelInvoke ("FireSecondary");
-			isSecondaryFiring = false;
-		}
-			
 	}
 
 	void UpdatePlaneControls() {
