@@ -31,7 +31,8 @@ public class BoostController : MonoBehaviour {
 
 		isBoosting = false;
 
-		boostInput = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_left);
+		if (player.useKeyboard) boostInput = Input.GetKey(KeyCode.LeftShift) ? 1 : 0;
+		else boostInput = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_left);
 		boostInput = Mathf.Clamp (boostInput, 0, 1);
 
 		if (boostInput > 0 && fuel > 0 && !blockBoost) isBoosting = true;
