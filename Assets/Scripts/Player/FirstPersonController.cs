@@ -103,13 +103,22 @@ public class FirstPersonController : MonoBehaviour {
 		
 	}
 
+	public bool useKeyboard = false;
+
 	void MovePlane() {
 
-//		transform.Rotate (Vector3.up * Input.GetAxisRaw ("Horizontal_" + playerID) * mouseSensitivityX);
-		transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * rotateSpeed);
+		if (useKeyboard) {
+			float rotate = 0;
+			if (Input.GetKey(KeyCode.LeftArrow)) rotate  = -1;
+			if (Input.GetKey(KeyCode.RightArrow)) rotate  = 1;
 
-//		inputY = InputPlus.GetData (controllerID, ControllerVarEnum.ShoulderBottom_right);//Input.GetAxisRaw ("Vertical_" + playerID) * -1f;
-		inputY = Mathf.Clamp (InputPlus.GetData (controllerID, ControllerVarEnum.ShoulderBottom_right), 0, 1);
+			transform.Rotate (Vector3.up * rotate * rotateSpeed);
+			inputY = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
+			
+		} else {
+			transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * rotateSpeed);
+			inputY = Mathf.Clamp (InputPlus.GetData (controllerID, ControllerVarEnum.ShoulderBottom_right), 0, 1);
+		}
 
 		Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
 		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier);
@@ -117,21 +126,66 @@ public class FirstPersonController : MonoBehaviour {
 	}
 
 	void MoveTank() {
-		transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * rotateSpeed);
+		Vector3 moveDir;
 
-		Vector3 moveDir = new Vector3 (0, 0, InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_y)*-1);//.normalized;
+		if (useKeyboard) {
+			//ROTATION
+			float rotate = 0;
+			if (Input.GetKey(KeyCode.LeftArrow)) rotate  = -1;
+			if (Input.GetKey(KeyCode.RightArrow)) rotate  = 1;
+			transform.Rotate (Vector3.up * rotate * rotateSpeed);
+
+			//MOVEMENT
+			inputY = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
+			if (inputY ==0) inputY = Input.GetKey(KeyCode.DownArrow) ? -1 : 0;
+			moveDir = new Vector3 (0, 0, inputY);
+
+		} else {
+			//ROTATION
+			transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * rotateSpeed);
+			//MOVEMENT
+			moveDir = new Vector3 (0, 0, InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_y)*-1);//.normalized;
+		}
+
+
 		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier);
-		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+		//higher values make acceleration sluggish
+		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, 0.5f);
 	}
 
 	void MoveStrafe() {
-		//rotate ship
-		transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * rotateSpeed);
+		Vector3 moveDir;
 
-		//move direction
-		Vector3 moveDir = new Vector3 (	InputPlus.GetData (controllerID, ControllerVarEnum.ThumbRight_x),
-										0,
-										InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_y) * -1);//.normalized;
+		if (useKeyboard) {
+			//FORWARD MOVEMENT
+			float inputY = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
+			if (inputY == 0) inputY = Input.GetKey(KeyCode.DownArrow) ? -1 : 0;
+
+			//ROTATION
+			float rotate = 0;
+			if (Input.GetKey(KeyCode.LeftArrow)) rotate  = -1;
+			if (Input.GetKey(KeyCode.RightArrow)) rotate  = 1;
+			transform.Rotate (Vector3.up * rotate * rotateSpeed);
+
+			//STRAFE LEFT OR RIGHT ...
+			var strafe = Input.GetKey(KeyCode.A) ? 1 : 0;
+			if (strafe ==0) strafe = Input.GetKey(KeyCode.D) ? -1 : 0;
+
+			//move direction
+			moveDir = new Vector3 (	strafe,
+									0,
+									inputY);
+
+		} else {
+			//rotate ship
+			transform.Rotate (Vector3.up * InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_x) * rotateSpeed);
+
+			//move direction - strafe enabled
+			moveDir = new Vector3 (	InputPlus.GetData (controllerID, ControllerVarEnum.ThumbRight_x),
+											0,
+											InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_y) * -1);//.normalized;
+		}
+
 		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier);
 		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
 	}
