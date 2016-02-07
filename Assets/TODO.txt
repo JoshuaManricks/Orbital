@@ -1,9 +1,8 @@
 - primary fire wont stop
+
 - laser weapon
-- environmental hazards
 
 - cloaking
-- 
 
 
 
