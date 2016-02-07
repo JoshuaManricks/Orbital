@@ -22,11 +22,11 @@ public class DamageArea : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		damageTargets.Add(other.gameObject.GetComponent<LifeController>());
+		if (other.gameObject.CompareTag("Player")) damageTargets.Add(other.gameObject.GetComponent<LifeController>());
 	}
 
 
 	void OnTriggerExit(Collider other) {
-		damageTargets.Remove(other.gameObject.GetComponent<LifeController>());
+		if (other.gameObject.CompareTag("Player")) damageTargets.Remove(other.gameObject.GetComponent<LifeController>());
 	}
 }
