@@ -24,7 +24,7 @@ public class BoostController : MonoBehaviour {
 
 	bool isBoosting = false;
 	float boostInput;
-
+	bool renderOn = false;
 	// Update is called once per frame
 	void Update () {
 		if (player.dummy) return;
@@ -63,7 +63,11 @@ public class BoostController : MonoBehaviour {
 			fuel = Mathf.Clamp(fuel, 0, maxFuel);
 			//increase player speed
 			player.boostModifier = speedIncrease;
-			trail.enabled = true;
+//			trail.enabled = true;
+			if (!renderOn) {
+				StartCoroutine("TrailOn");
+				renderOn = true;
+			}
 
 		} else {
 			//regen fuel
@@ -71,12 +75,36 @@ public class BoostController : MonoBehaviour {
 			fuel = Mathf.Clamp(fuel, 0, maxFuel);
 			//set player speed back to normal
 			player.boostModifier = 0;
-			trail.enabled = false;
+//			trail.enabled = false;
+			if (renderOn) {
+				StartCoroutine("TrailOff");
+				renderOn = false;
+			}
+
 
 			if (fuel > 3f) blockBoost = false;
 			else blockBoost = true;
 		}
 			
+	}
+
+	float trailTime = 0.5f;
+	IEnumerator TrailOn() {
+		StopCoroutine("TrailOff");
+		while (trail.time < trailTime) {
+			trail.time += 0.02f;
+			yield return new WaitForEndOfFrame();
+		}
+
+	}
+
+	IEnumerator TrailOff() {
+		StopCoroutine("TrailOn");
+		while (trail.time > 0) {
+			trail.time -= 0.02f;
+			yield return new WaitForEndOfFrame();
+		}
+
 	}
 
 

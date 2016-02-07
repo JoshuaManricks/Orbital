@@ -7,7 +7,7 @@ public class LifeController : MonoBehaviour {
 	public float currentLife;
 	FirstPersonController player;
 
-
+	public bool invulnerable = false;
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<FirstPersonController>();
@@ -21,6 +21,9 @@ public class LifeController : MonoBehaviour {
 	public void TakeDamage(float damage) {
 		Debug.Log(gameObject.name + " TakeDamage "+damage);
 
+
+		if (invulnerable) return;
+			
 		currentLife = Mathf.Clamp(currentLife - damage, 0, maxLife);
 
 		if (currentLife == 0) {
