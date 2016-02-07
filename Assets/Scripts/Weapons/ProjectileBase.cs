@@ -23,6 +23,8 @@ public class ProjectileBase : MonoBehaviour {
 	[HideInInspector]
 	public FirstPersonController owner;
 
+	public GameObject impactEffect;
+
 	void Awake() {
 		rigidbody = GetComponent<Rigidbody> ();
 	}
@@ -54,13 +56,15 @@ public class ProjectileBase : MonoBehaviour {
 		if (collision.gameObject.tag == "Player") {
 //			Debug.Log(collision.gameObject.name);
 			collision.gameObject.GetComponent<LifeController>().TakeDamage(damage);
-
+			SpawnImpact(collision.gameObject);
 			Destroy(gameObject);
 		} else if (collision.gameObject.tag == "Wall") {
+			SpawnImpact();
 			Destroy(gameObject);
 				
 		} else if (collision.gameObject.tag == "Projectile") {
 			Debug.Log("OnCollisionEnter WEAPON");
+			SpawnImpact();
 			Destroy(gameObject);
 
 		}
@@ -72,14 +76,17 @@ public class ProjectileBase : MonoBehaviour {
 		if (other.gameObject.tag == "Player") {
 //			Debug.Log(other.gameObject.name);
 			other.gameObject.GetComponent<LifeController>().TakeDamage(damage);
+			SpawnImpact(other.gameObject);
 			Destroy(gameObject);
 
 		} else if (other.gameObject.tag == "Wall") {
+			SpawnImpact();
 			Destroy(gameObject);
 //			Debug.Log("Destroy by WALL");
 
 		} else if (other.gameObject.tag == "Projectile") {
 			Debug.Log("OnTriggerEnter WEAPON");
+			SpawnImpact();
 			Destroy(gameObject);
 		} else {
 //			Debug.Log("OnTriggerEnter "+other.gameObject.name);
@@ -87,6 +94,16 @@ public class ProjectileBase : MonoBehaviour {
 
 	}
 
+	void SpawnImpact() {
+		if (impactEffect != null) Instantiate(impactEffect, transform.position, transform.rotation);
+	}
+
+	void SpawnImpact(GameObject go) {
+		if (impactEffect != null){
+			GameObject effect = Instantiate(impactEffect, transform.position, transform.rotation) as GameObject;
+			effect.transform.parent = go.transform;
+		}
+	}
 
 	void RayDown() {
 		// Grounded check
@@ -95,7 +112,6 @@ public class ProjectileBase : MonoBehaviour {
 
 		if (Physics.Raycast(ray, out hit, 5f)) {
 //			Debug.Log (hit.collider.gameObject.name + " : "+hit.distance);
-
 			if (hit.distance > 1.7) down = .2f;
 			else down = 0;
 		}

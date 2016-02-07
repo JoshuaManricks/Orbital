@@ -38,7 +38,7 @@ public class FirstPersonController : MonoBehaviour {
 	Rigidbody rigidbody;
 
 
-	bool initCompleted = false;
+	bool initCompleted = true;
 
 	//public float jumpForce = 220;
 	//	public LayerMask groundedMask;
@@ -157,6 +157,7 @@ public class FirstPersonController : MonoBehaviour {
 		Vector3 moveDir;
 
 		if (useKeyboard) {
+			Debug.Log("MOVE");
 			//FORWARD MOVEMENT
 			float inputY = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
 			if (inputY == 0) inputY = Input.GetKey(KeyCode.DownArrow) ? -1 : 0;
