@@ -20,6 +20,8 @@ public class FirstPersonController : MonoBehaviour {
 	public float rotateSpeed = 2;
 	[HideInInspector]
 	public float boostModifier = 0f;
+//	[HideInInspector]
+	public float movementModifier = 0f;
 
 	public bool dummy = false;
 //	public bool autoMove = false;
@@ -121,7 +123,7 @@ public class FirstPersonController : MonoBehaviour {
 		}
 
 		Vector3 moveDir = new Vector3 (0, 0, inputY);//.normalized;
-		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier);
+		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier + movementModifier);
 		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
 	}
 
@@ -148,7 +150,7 @@ public class FirstPersonController : MonoBehaviour {
 		}
 
 
-		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier);
+		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier + movementModifier);
 		//higher values make acceleration sluggish
 		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, 0.5f);
 	}
@@ -157,10 +159,10 @@ public class FirstPersonController : MonoBehaviour {
 		Vector3 moveDir;
 
 		if (useKeyboard) {
-			Debug.Log("MOVE");
 			//FORWARD MOVEMENT
 			float inputY = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
 			if (inputY == 0) inputY = Input.GetKey(KeyCode.DownArrow) ? -1 : 0;
+
 
 			//ROTATION
 			float rotate = 0;
@@ -187,7 +189,7 @@ public class FirstPersonController : MonoBehaviour {
 											InputPlus.GetData (controllerID, ControllerVarEnum.ThumbLeft_y) * -1);//.normalized;
 		}
 
-		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier);
+		Vector3 targetMoveAmount = moveDir * (movementSpeed + boostModifier + movementModifier);
 		moveAmount = Vector3.SmoothDamp (moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
 	}
 	
