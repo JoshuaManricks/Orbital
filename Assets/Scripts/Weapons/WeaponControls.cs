@@ -143,7 +143,21 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	void UpdatePlaneControls() {
+		if (player.useKeyboard) {
+			if (Input.GetKeyDown(KeyCode.W)) {
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			} else if (Input.GetKeyUp(KeyCode.W)) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FirePrimary");
+			}
 
+			if (Input.GetKeyDown(KeyCode.E)) {
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			} else if (Input.GetKeyUp(KeyCode.E)) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FireSecondary");
+			}
+		} else {
 		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_bottom) == 1f && !isPrimaryFiring) {
 			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
 			isPrimaryFiring = true;
@@ -158,6 +172,7 @@ public class WeaponControls : MonoBehaviour {
 		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 0f && isSecondaryFiring) {
 			CancelInvoke ("FireSecondary");
 			isSecondaryFiring = false;
+		}
 		}
 	}
 
