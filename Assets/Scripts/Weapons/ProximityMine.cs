@@ -5,7 +5,7 @@ public class ProximityMine : ProjectileBase {
 
 	public float proximity = 5f;
 	public float explositonDelay = 0.5f;//delay the explosion once a ship is in range
-	public float activationDelay = 2f;//delay the proximity sensor
+	public float activationDelay = 2f;//delay the proximity sensor to sta
 	public float explosionRadius = 6f;
 
 	GameController gameController;
@@ -13,13 +13,14 @@ public class ProximityMine : ProjectileBase {
 	// Use this for initialization
 	void Start () {
 		gameController = FindObjectOfType<GameController>();
+
 	}
 	
 	// Update is called once per frame
 
 	protected override void Update() {
 		timer+=Time.deltaTime;
-
+//		transform.LookAt(Vector3.zero);
 		if (timer > activationDelay) CheckForProximty();
 	}
 
@@ -58,6 +59,9 @@ public class ProximityMine : ProjectileBase {
 		Debug.Log("Explode "+delay);
 		GetComponent<SphereCollider>().isTrigger = true;
 		GetComponent<SphereCollider>().radius = explosionRadius;
+
+		GameObject effect = Instantiate(impactEffect, transform.position, transform.rotation) as GameObject;
+		effect.transform.LookAt(Vector3.zero);
 
 		yield return new WaitForEndOfFrame();
 
