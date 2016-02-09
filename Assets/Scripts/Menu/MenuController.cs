@@ -16,6 +16,8 @@ public class MenuController : MonoBehaviour {
 
 	bool checkForPlayers = true;
 
+	public float rotateSpeed = .2f;
+
 	// Use this for initialization
 	void Start () {
 		gameController = GameObject.FindObjectOfType<GameController>();
@@ -29,6 +31,8 @@ public class MenuController : MonoBehaviour {
 				SpawnPlayers();
 			}
 		}
+
+		transform.RotateAround (Vector3.zero, Vector3.up, rotateSpeed);
 	}
 
 	void SpawnPlayers() {
