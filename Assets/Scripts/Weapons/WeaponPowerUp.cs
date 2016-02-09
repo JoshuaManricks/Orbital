@@ -7,9 +7,9 @@ public class WeaponPowerUp : PowerUp {
 	public int ammoCount = 5;
 
 	// Use this for initialization
-	void Start () {
-	
-	}
+//	void Start () {
+//	
+//	}
 
 	protected override void OnTriggerEnter(Collider other) {
 //		Debug.Log(other.gameObject.name);

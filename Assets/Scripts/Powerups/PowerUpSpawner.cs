@@ -18,10 +18,14 @@ public class PowerUpSpawner : MonoBehaviour {
 
 	void SpawnPowerup () {
 //		Debug.Log("SpawnPowerup");
+		PowerUpSpawnPoint spawnPoint = spawnPoints[Random.Range(0,spawnPoints.Length)].GetComponent<PowerUpSpawnPoint>();
 
-		GameObject powerup = Instantiate(powerups[Random.Range(0,powerups.Length-1)]);
+		if (spawnPoint.isAvailable) {
+			GameObject powerup = Instantiate (powerups [Random.Range (0, powerups.Length - 1)]);
 
-		powerup.transform.position = spawnPoints[Random.Range(0,spawnPoints.Length-1)].transform.position;
+			powerup.transform.position = spawnPoint.gameObject.transform.position;
+			powerup.transform.LookAt (Vector3.zero);
+		}
 	}
 
 	// Update is called once per frame

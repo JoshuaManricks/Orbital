@@ -7,7 +7,7 @@ public class BoostPowerUp : PowerUp {
 
 	// Use this for initialization
 	void Start () {
-
+		
 	}
 
 	protected override void OnTriggerEnter(Collider other) {
