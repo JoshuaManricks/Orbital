@@ -43,6 +43,7 @@ public class WeaponControls : MonoBehaviour {
 		player  = transform.parent.gameObject.GetComponent<FirstPersonController>();
 		weaponsBar  = player.GetComponentInChildren<SpecialWeaponsBar>();
 
+		weaponsBar.SetShots (0);
 		ChangeWeapon(startPrimaryWeapon);
 		ChangeWeapon(startSecondaryWeapon, 5);
 
@@ -203,6 +204,7 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	public void ChangeWeapon(WeaponName newWeapon, int amountOfAmmo) {
+
 		//find weaopn
 		foreach (WeaponComponent weapon in weapons) {
 			if (weapon.name == newWeapon) {
@@ -227,10 +229,12 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	public void ChangeWeapon(WeaponName newWeapon) {
-		//find weaopn
+		//find weapon
 		foreach (WeaponComponent weapon in weapons) {
+			//find the weapon name
 			if (weapon.name == newWeapon) {
 
+				//check for primary or secondary
 				if (weapon.grade == WeaponGrade.Primary) {
 					if (primaryWeapon) primaryWeapon.gameObject.SetActive(false);
 					primaryWeapon = weapon;
@@ -255,7 +259,8 @@ public enum WeaponName  {
 	SeekingMissile,
 	ProxyMine,
 	SeekingMissileCluster,
-	None
+	PrimaryNone,
+	SecondaryNone
 }
 
 public enum WeaponGrade  {
