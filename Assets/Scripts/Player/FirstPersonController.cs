@@ -210,11 +210,16 @@ public class FirstPersonController : MonoBehaviour {
 
 		//disableWeapons();
 
+		//remove controls
 		gameController.ReSpawnPlayer(playerID);
 
+		//destroy interface connected to ship
 		foreach (GameObject g in destroyOnDeath){
 			Destroy(g);
 		}
+
+		//remove the gravity controller
+		Destroy (GetComponent<GravityBody> ());
 
 		StartCoroutine("CleanUp");
 	}
