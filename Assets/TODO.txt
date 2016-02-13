@@ -1,4 +1,8 @@
-- primary fire wont stop
+
+- powerup spawner can spawn multiple powers in the same place
+
+
+
 
 - laser weapon
 

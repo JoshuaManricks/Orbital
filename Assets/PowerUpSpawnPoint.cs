@@ -2,34 +2,40 @@
 using System.Collections;
 
 public class PowerUpSpawnPoint : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	// Update is called once per frame
-	void Update () {
-//		isAvailable = true;
-	}
-
 	public bool isAvailable = true;
 
-//	bool isAvailable = true;
-
 	void OnTriggerEnter(Collider other) {
-		Debug.Log ("OnTriggerEnter "+other.gameObject.name);
+//		Debug.Log ("PowerUpSpawnPoint OnTriggerEnter "+other.gameObject.name);
 		isAvailable = false;
 	}
 
 	void OnTriggerExit(Collider other) {
-		Debug.Log ("OnTriggerExit "+other.gameObject.name);
+//		Debug.Log ("PowerUpSpawnPoint OnTriggerExit "+other.gameObject.name);
 		isAvailable = true;
-		//		Destroy(other.gameObject);
 	}
-		
-	void OnTriggerStay(Collider other) {
+
+	/*
+	void OnColliderEnter(Collision other) {
+		Debug.Log ("PowerUpSpawnPoint OnColliderEnter "+other.gameObject.name);
 		isAvailable = false;
 	}
+
+	void OnColliderExit(Collision other) {
+		Debug.Log ("PowerUpSpawnPoint OnColliderExit "+other.gameObject.name);
+		isAvailable = true;
+	}
+
+
+	void OnColliderStay(Collision other) {
+		Debug.Log ("OnTriggerExit "+other.gameObject.name);
+
+		isAvailable = false;
+	}
+
+	void OnTriggerStay(Collider other) {
+		isAvailable = false;
+	}*/
 
 }

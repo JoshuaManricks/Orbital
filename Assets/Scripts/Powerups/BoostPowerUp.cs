@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BoostPowerUp : PowerUp {
 
+	public PowerUpSpawnPoint spawnPoint;
 	public int healAmount = 5;
 
 	// Use this for initialization
@@ -12,9 +13,15 @@ public class BoostPowerUp : PowerUp {
 
 	protected override void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Player") {
-			Debug.Log ("adds cript");
+			spawnPoint.isAvailable = true;
+
 			other.gameObject.AddComponent<InfiniteBoostModifier> ();
-			Destroy(gameObject);
+			Destroy (gameObject);
+
+		} else if (other.gameObject.tag == "PowerUpSpawnPoint") {
+
+			spawnPoint = other.gameObject.GetComponent<PowerUpSpawnPoint> ();
+			spawnPoint.isAvailable = false;
 		}
 	}
 

@@ -6,12 +6,7 @@ public class GameController : MonoBehaviour {
 	public GameObject[] players;
 
 	int spawnID; 
-	public Transform[] spawnPoints;
-
-//	public GameObject player1;
-//	public GameObject player2;
-//	public GameObject player3;
-//	public GameObject player4;
+	public PlayerSpawnPoint[] spawnPoints;
 
 	public ShipConfigData player1Config;
 	public ShipConfigData player2Config;
@@ -22,20 +17,16 @@ public class GameController : MonoBehaviour {
 	public GameObject tankShip;
 	public GameObject strafeShip;
 
-	[HideInInspector]
+//	[HideInInspector]
 	public float spawnDelay = 5f;
 
 	// Use this for initialization
 	void Start () {
-
 		DontDestroyOnLoad(gameObject);
 
-		spawnPoints = gameObject.GetComponentsInChildren<Transform>();
-
-//		players = GameObject.FindGameObjectsWithTag("Player");
+		spawnPoints = gameObject.GetComponentsInChildren<PlayerSpawnPoint>();
 
 		spawnID = Random.Range(0, spawnPoints.Length-1);
-
 	}
 	
 	// Update is called once per frame
@@ -125,9 +116,13 @@ public class GameController : MonoBehaviour {
 	}
 
 	void SpawnShip(ShipConfigData config) {
-		
+
+		while (!spawnPoints [spawnID].isAvailable) {
+			MoveSpawnPoint ();
+		}
+			
 //		PlayerConfig playerConfig = Instantiate(GetShipPrefab(config.ship),spawnPoints[spawnID].position, Quaternion.identity) as PlayerConfig;
-		GameObject go = Instantiate(GetShipPrefab(config.ship),spawnPoints[spawnID].position, Quaternion.identity) as GameObject;
+		GameObject go = Instantiate(GetShipPrefab(config.ship),spawnPoints[spawnID].gameObject.transform.position, Quaternion.identity) as GameObject;
 
 		go.GetComponent<PlayerConfig>().Configure(config.playerID, totalPlayers);
 

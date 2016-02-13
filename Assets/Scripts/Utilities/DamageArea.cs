@@ -14,13 +14,14 @@ public class DamageArea : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	/*void Update () {
 	
 		foreach( LifeController l in damageTargets) {
 			l.TakeDamage(damage);
 		}
-	}
+	}*/
 
+	/*
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.CompareTag("Player")) damageTargets.Add(other.gameObject.GetComponent<LifeController>());
 	}
@@ -28,5 +29,14 @@ public class DamageArea : MonoBehaviour {
 
 	void OnTriggerExit(Collider other) {
 		if (other.gameObject.CompareTag("Player")) damageTargets.Remove(other.gameObject.GetComponent<LifeController>());
+	}*/
+
+	void OnTriggerStay(Collider other) {
+		Debug.Log ("Damage Area : "+other.gameObject.name);
+
+		if (other.gameObject.CompareTag ("SpawnPoint")) return;
+
+//		if (other.gameObject.CompareTag("Player")) damageTargets.Remove(other.gameObject.GetComponent<LifeController>());
+		other.gameObject.GetComponent<LifeController>().TakeDamage(damage);
 	}
 }

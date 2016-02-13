@@ -2,7 +2,7 @@
 using System.Collections;
 using InputPlusControl;
 
-[RequireComponent (typeof (GravityBody))]
+//[RequireComponent (typeof (GravityBody))]
 public class FirstPersonController : MonoBehaviour {
 
 	//////////////////////////////////////////
@@ -82,7 +82,6 @@ public class FirstPersonController : MonoBehaviour {
 
 		} else if (shipType == ShipType.Strafe) {
 			MoveStrafe ();
-
 		}
 
 
@@ -102,7 +101,6 @@ public class FirstPersonController : MonoBehaviour {
 		} else {
 			grounded = false;
 		}*/
-		
 	}
 
 	public bool useKeyboard = false;

@@ -69,35 +69,63 @@ public class WeaponControls : MonoBehaviour {
 	}
 
 	void UpdateTankControls() {
+		
+		if (player.useKeyboard) {
+			//rotate turret
+			float rot = Input.GetKey(KeyCode.D) ? 1 : 0;
+			if (rot == 0) rot = Input.GetKey (KeyCode.A) ? -1 : 0;
+			Debug.Log (rot);
 
-		//rotate turret
-		float x = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_x);
-		float y = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_y);
-		if (x != 0.0f || y != 0.0f) {
-			float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
-			angle += 90f;
-			transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.AngleAxis (angle, Vector3.up), .1f);
-		}
+			if (rot != 0f) {
+				Vector3 a = transform.localRotation.eulerAngles;
+				a.y += rot * 30f;
+				transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.Euler(a), .1f);
+			}
+			if (Input.GetKeyDown(KeyCode.W)) {
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+			} else if (Input.GetKeyUp(KeyCode.W)) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FirePrimary");
+			}
 
-		//fire weapons
-		float inputY = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
-		inputY = Mathf.Clamp (inputY, 0, 1);
+			if (Input.GetKeyDown(KeyCode.S)) {
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+			} else if (Input.GetKeyUp(KeyCode.S)) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FireSecondary");
+			}
 
-		if (inputY > 0 && !isPrimaryFiring) {
-			isPrimaryFiring = true;
-			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
 
-		} else if (inputY == 0 && isPrimaryFiring) {
-			isPrimaryFiring = false;
-			CancelInvoke ("FirePrimary");
-		}
+		} else {
+			//rotate turret
+			float x = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_x);
+			float y = InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight_y);
+			if (x != 0.0f || y != 0.0f) {
+				float angle = Mathf.Atan2 (y, x) * Mathf.Rad2Deg;
+				angle += 90f;
+				transform.localRotation = Quaternion.Slerp (transform.localRotation, Quaternion.AngleAxis (angle, Vector3.up), .1f);
+			}
 
-		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 1f && !isSecondaryFiring) {
-			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-			isSecondaryFiring = true;
-		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 0f && isSecondaryFiring) {
-			CancelInvoke ("FireSecondary");
-			isSecondaryFiring = false;
+			//fire weapons
+			float inputY = InputPlus.GetData (player.controllerID, ControllerVarEnum.ShoulderBottom_right);
+			inputY = Mathf.Clamp (inputY, 0, 1);
+
+			if (inputY > 0 && !isPrimaryFiring) {
+				isPrimaryFiring = true;
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+
+			} else if (inputY == 0 && isPrimaryFiring) {
+				isPrimaryFiring = false;
+				CancelInvoke ("FirePrimary");
+			}
+
+			if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 1f && !isSecondaryFiring) {
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+				isSecondaryFiring = true;
+			} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.ThumbRight) == 0f && isSecondaryFiring) {
+				CancelInvoke ("FireSecondary");
+				isSecondaryFiring = false;
+			}
 		}
 
 	}
@@ -158,22 +186,23 @@ public class WeaponControls : MonoBehaviour {
 				isPrimaryFiring = false;
 				CancelInvoke ("FireSecondary");
 			}
-		} else {
-		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_bottom) == 1f && !isPrimaryFiring) {
-			InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
-			isPrimaryFiring = true;
-		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_bottom) == 0f && isPrimaryFiring) {
-			CancelInvoke ("FirePrimary");
-			isPrimaryFiring = false;
-		}
 
-		if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 1f && !isSecondaryFiring) {
-			InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
-			isSecondaryFiring = true;
-		} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 0f && isSecondaryFiring) {
-			CancelInvoke ("FireSecondary");
-			isSecondaryFiring = false;
-		}
+		} else {
+			if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_bottom) == 1f && !isPrimaryFiring) {
+				InvokeRepeating ("FirePrimary", float.Epsilon, primaryInterval);
+				isPrimaryFiring = true;
+			} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_bottom) == 0f && isPrimaryFiring) {
+				CancelInvoke ("FirePrimary");
+				isPrimaryFiring = false;
+			}
+
+			if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 1f && !isSecondaryFiring) {
+				InvokeRepeating ("FireSecondary", float.Epsilon, secondaryInterval);
+				isSecondaryFiring = true;
+			} else if (InputPlus.GetData (player.controllerID, ControllerVarEnum.FP_left) == 0f && isSecondaryFiring) {
+				CancelInvoke ("FireSecondary");
+				isSecondaryFiring = false;
+			}
 		}
 	}
 
