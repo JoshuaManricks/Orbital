@@ -20,7 +20,7 @@ public class FirstPersonController : MonoBehaviour {
 	public float rotateSpeed = 2;
 	[HideInInspector]
 	public float boostModifier = 0f;
-//	[HideInInspector]
+	[HideInInspector]
 	public float movementModifier = 0f;
 
 	public bool dummy = false;
@@ -218,6 +218,7 @@ public class FirstPersonController : MonoBehaviour {
 
 		//remove the gravity controller
 		Destroy (GetComponent<GravityBody> ());
+		Destroy (GetComponent<Rigidbody> ());
 
 		StartCoroutine("CleanUp");
 	}

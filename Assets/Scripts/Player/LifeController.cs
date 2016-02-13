@@ -19,7 +19,7 @@ public class LifeController : MonoBehaviour {
 	}
 
 	public void TakeDamage(float damage) {
-		Debug.Log(gameObject.name + " TakeDamage "+damage);
+//		Debug.Log(gameObject.name + " TakeDamage "+damage);
 
 
 		if (invulnerable) return;
@@ -41,6 +41,7 @@ public class LifeController : MonoBehaviour {
 
 		foreach (Collider c in cols) {
 			c.enabled = true; 
+			Debug.Log ("Add rigidbody "+c.name);
 			c.gameObject.AddComponent<Rigidbody>();
 		}
 
