@@ -2,11 +2,15 @@
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-
+	public int playerSpawnID;
 	public GameObject[] players;
 
-	int spawnID; 
-	public PlayerSpawnPoint[] spawnPoints;
+
+//	public PlayerSpawnPoint[] spawnPoints;
+
+	public int planetID;
+	public PlanetController[] planets;
+
 
 	public ShipConfigData player1Config;
 	public ShipConfigData player2Config;
@@ -24,18 +28,23 @@ public class GameController : MonoBehaviour {
 	void Start () {
 		DontDestroyOnLoad(gameObject);
 
-		spawnPoints = gameObject.GetComponentsInChildren<PlayerSpawnPoint>();
 
-		spawnID = Random.Range(0, spawnPoints.Length-1);
+//		spawnPoints = gameObject.GetComponentsInChildren<PlayerSpawnPoint>();
+
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+		
+//	bool randomPlayerSpawnPosition = false;
 
-
-	public void StartMatch() {
+	public void StartMatch(int pID) {
+//		randomPlayerSpawnPosition = randomSpawnPos;
+		planetID = pID;
+		playerSpawnID = Random.Range(0, planets[planetID].playerSpawnPoints.Length-1);
 
 		Debug.Log("+++++ START MATCH +++++");
 	
@@ -117,12 +126,12 @@ public class GameController : MonoBehaviour {
 
 	void SpawnShip(ShipConfigData config) {
 
-		while (!spawnPoints [spawnID].isAvailable) {
+		while (!planets[planetID].playerSpawnPoints[playerSpawnID].isAvailable) {
 			MoveSpawnPoint ();
 		}
 			
 //		PlayerConfig playerConfig = Instantiate(GetShipPrefab(config.ship),spawnPoints[spawnID].position, Quaternion.identity) as PlayerConfig;
-		GameObject go = Instantiate(GetShipPrefab(config.ship),spawnPoints[spawnID].gameObject.transform.position, Quaternion.identity) as GameObject;
+		GameObject go = Instantiate(GetShipPrefab(config.ship),planets[planetID].playerSpawnPoints[playerSpawnID].gameObject.transform.position, Quaternion.identity) as GameObject;
 
 		go.GetComponent<PlayerConfig>().Configure(config.playerID, totalPlayers);
 
@@ -134,8 +143,13 @@ public class GameController : MonoBehaviour {
 	}
 
 	void MoveSpawnPoint() {
-		spawnID++;
-		if (spawnID == spawnPoints.Length) spawnID = 0;
+		if (planets[planetID].randomPlayerSpawnPosition) {
+			playerSpawnID = Random.Range(0, planets[planetID].playerSpawnPoints.Length-1);
+
+		} else {
+			playerSpawnID++;
+			if (playerSpawnID == planets[planetID].playerSpawnPoints.Length) playerSpawnID = 0;
+		}
 	}
 
 }

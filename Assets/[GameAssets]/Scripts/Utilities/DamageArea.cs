@@ -14,8 +14,9 @@ public class DamageArea : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider other) {
+		
 		if (other.gameObject.CompareTag ("SpawnPoint")) return;
-
+//		Debug.Log("DamageArea "+other.gameObject.name);
 		other.gameObject.GetComponent<LifeController>().TakeDamage(damage);
 	}
 }

@@ -32,10 +32,11 @@ public class ProximityMine : ProjectileBase {
 		int inRangeCount = 0;
 
 		foreach (GameObject go in gameController.players) {
-
-			if (Vector3.Distance(go.transform.position, transform.position) <= proximity) {
-				inRangeCount++;
-				Debug.DrawLine(go.transform.position, transform.position, Color.red);
+			if (go != null) {
+				if (Vector3.Distance(go.transform.position, transform.position) <= proximity) {
+					inRangeCount++;
+					Debug.DrawLine(go.transform.position, transform.position, Color.red);
+				}
 			}
 		}
 

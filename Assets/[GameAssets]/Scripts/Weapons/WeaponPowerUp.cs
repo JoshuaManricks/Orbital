@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WeaponPowerUp : PowerUp {
+public class WeaponPowerUp : PowerUpBase {
 	public WeaponName weaponName;
 
 	public int ammoCount = 5;

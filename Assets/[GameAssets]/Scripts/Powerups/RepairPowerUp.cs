@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RepairPowerUp : PowerUp {
+public class RepairPowerUp : PowerUpBase {
 
 	public int healAmount = 5;
 

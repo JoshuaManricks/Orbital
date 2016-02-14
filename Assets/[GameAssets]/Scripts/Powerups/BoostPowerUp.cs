@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BoostPowerUp : PowerUp {
+public class BoostPowerUp : PowerUpBase {
 
 	public PowerUpSpawnPoint spawnPoint;
 	public int healAmount = 5;
