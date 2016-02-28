@@ -6,7 +6,7 @@ public class MenuController : MonoBehaviour {
 	GameController gameController;
 
 	public PlanetController[] planets;
-	public int planetID;
+	public int planetID = 0;
 
 	public int minPlayers = 2;
 	public int confirmedPlayers;
@@ -38,7 +38,7 @@ public class MenuController : MonoBehaviour {
 	}
 
 	void SpawnPlayers() {
-		gameController.StartMatch(2);
+		gameController.StartMatch(planetID);
 		gameObject.SetActive(false);
 	}
 

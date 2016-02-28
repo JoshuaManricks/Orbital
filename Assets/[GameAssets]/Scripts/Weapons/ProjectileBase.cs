@@ -85,7 +85,7 @@ public class ProjectileBase : MonoBehaviour {
 //			Debug.Log("Destroy by WALL");
 
 		} else if (other.gameObject.tag == "Projectile") {
-			Debug.Log("OnTriggerEnter WEAPON");
+//			Debug.Log("OnTriggerEnter WEAPON");
 			SpawnImpact();
 			Destroy(gameObject);
 		} else {

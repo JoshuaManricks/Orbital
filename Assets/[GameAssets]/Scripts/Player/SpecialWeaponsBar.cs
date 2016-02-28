@@ -15,7 +15,7 @@ public class SpecialWeaponsBar : MonoBehaviour {
 	}
 	
 	public void SetShots (int amount) {
-		Debug.Log ("SetShots "+amount);
+//		Debug.Log ("SetShots "+amount);
 
 		totalShots = currentShots = amount;
 		for (int x = 0; x < nodes.Length; x++) {

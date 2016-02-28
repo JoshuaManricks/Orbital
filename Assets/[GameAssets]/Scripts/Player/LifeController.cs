@@ -11,6 +11,7 @@ public class LifeController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<FirstPersonController>();
+
 	}
 	
 	// Update is called once per frame
@@ -37,14 +38,15 @@ public class LifeController : MonoBehaviour {
 
 
 	void Explode() {
-		Collider[] cols = GetComponentsInChildren<Collider>();
+		/*
+		 * Collider[] cols = gameObject.GetComponentsInChildren<Collider>();
 
 		foreach (Collider c in cols) {
 			c.enabled = true; 
 //			Debug.Log ("Add rigidbody "+c.name);
 			c.gameObject.AddComponent<Rigidbody>();
 		}
-
+		*/
 		GetComponent<BoxCollider>().enabled = false;
 	}
 

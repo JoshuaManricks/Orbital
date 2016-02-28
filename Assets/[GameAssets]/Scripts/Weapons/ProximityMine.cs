@@ -13,7 +13,6 @@ public class ProximityMine : ProjectileBase {
 	// Use this for initialization
 	void Start () {
 		gameController = FindObjectOfType<GameController>();
-
 	}
 	
 	// Update is called once per frame
@@ -45,7 +44,7 @@ public class ProximityMine : ProjectileBase {
 
 	bool triggered = false;
 	void TriggerExplosion(float delay) {
-		Debug.Log("DelayExplosion ");
+//		Debug.Log("DelayExplosion ");
 
 		if (triggered) return;
 
@@ -57,7 +56,7 @@ public class ProximityMine : ProjectileBase {
 //		triggered = true;
 		yield return new WaitForSeconds(delay);
 
-		Debug.Log("Explode "+delay);
+//		Debug.Log("Explode "+delay);
 		GetComponent<SphereCollider>().isTrigger = true;
 		GetComponent<SphereCollider>().radius = explosionRadius;
 
@@ -71,7 +70,7 @@ public class ProximityMine : ProjectileBase {
 
 	protected override void OnCollisionEnter(Collision collision) {
 
-		Debug.Log("Proxy OnCollisionEnter "+collision.gameObject.name);
+//		Debug.Log("Proxy OnCollisionEnter "+collision.gameObject.name);
 
 		if (collision.gameObject.tag == "Player" ||
 			collision.gameObject.tag == "Projectile") TriggerExplosion(0);
@@ -80,7 +79,7 @@ public class ProximityMine : ProjectileBase {
 
 	//when the mine is shot at
 	protected override void OnTriggerEnter(Collider other) {
-		Debug.Log("Proxy OnTriggerEnter "+other.gameObject.name);
+//		Debug.Log("Proxy OnTriggerEnter "+other.gameObject.name);
 		TriggerExplosion(0);
 
 		if (other.gameObject.tag == "Player") {
