@@ -16,12 +16,12 @@ public class PlayerSpawnPoint : MonoBehaviour {
 	public bool isAvailable = true;
 
 	void OnTriggerEnter(Collider other) {
-		Debug.Log ("PlayerSpawnPoint OnTriggerEnter "+other.gameObject.name);
+//		Debug.Log ("PlayerSpawnPoint OnTriggerEnter "+other.gameObject.name);
 		isAvailable = false;
 	}
 
 	void OnTriggerExit(Collider other) {
-		Debug.Log ("PlayerSpawnPoint OnTriggerExit "+other.gameObject.name);
+//		Debug.Log ("PlayerSpawnPoint OnTriggerExit "+other.gameObject.name);
 		isAvailable = true;
 	}
 }

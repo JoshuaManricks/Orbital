@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PowerUp : MonoBehaviour {
+public class PowerUpBase : MonoBehaviour {
 
 	public PowerUpType type;
 

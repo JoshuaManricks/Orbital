@@ -27,6 +27,7 @@ public class PlayerConfig : MonoBehaviour {
 
 	}
 
+	//setup camera based on player ID and number of players
 	void ConfigureCamera(int playerCount) {
 
 		if (playerCount > 2 ) {

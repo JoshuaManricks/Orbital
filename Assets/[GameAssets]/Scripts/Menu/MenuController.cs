@@ -5,6 +5,8 @@ public class MenuController : MonoBehaviour {
 
 	GameController gameController;
 
+	public PlanetController[] planets;
+	public int planetID;
 
 	public int minPlayers = 2;
 	public int confirmedPlayers;
@@ -36,18 +38,20 @@ public class MenuController : MonoBehaviour {
 	}
 
 	void SpawnPlayers() {
-		gameController.StartMatch();
+		gameController.StartMatch(planetID);
 		gameObject.SetActive(false);
 	}
 
 	bool HaveAllPlayersJoined() {
+		
 		confirmedPlayers = 0;
 
-		if (player1.selctionConfirmed) confirmedPlayers++;
-		if (player2.selctionConfirmed) confirmedPlayers++;
-		if (player3.selctionConfirmed) confirmedPlayers++;
-		if (player4.selctionConfirmed) confirmedPlayers++;
+		if (player1.selectorState == SelectorState.ShipSelected) confirmedPlayers++;
+		if (player2.selectorState == SelectorState.ShipSelected) confirmedPlayers++;
+		if (player3.selectorState == SelectorState.ShipSelected) confirmedPlayers++;
+		if (player4.selectorState == SelectorState.ShipSelected) confirmedPlayers++;
 
 		return (confirmedPlayers >= minPlayers);
+
 	}
 }

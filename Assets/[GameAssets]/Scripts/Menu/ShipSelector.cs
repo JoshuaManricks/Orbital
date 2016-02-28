@@ -4,6 +4,8 @@ using InputPlusControl;
 
 public class ShipSelector : MonoBehaviour {
 
+	public SelectorState selectorState = SelectorState.WaitingToJoin;
+
 	public PlayerID playerID;
 	int controllerID;
 	int selectionIndex = 0;
@@ -33,8 +35,8 @@ public class ShipSelector : MonoBehaviour {
 	
 	// Update is called once per frame
 	bool canPress = true;
-	public bool selctionConfirmed = false;
-	bool joinedGame = false;
+//	public bool selctionConfirmed = false;
+//	bool joinedGame = false;
 
 	void Update () {
 		if (useKeyboard) KeyBoardControls();
@@ -44,10 +46,8 @@ public class ShipSelector : MonoBehaviour {
 
 	void KeyBoardControls() {
 		
-		if (!joinedGame) {
+		if (selectorState == SelectorState.WaitingToJoin) {
 			//press A to add player
-
-
 			if (Input.GetKeyDown(KeyCode.A)) {
 				JoinGame();
 				StartCoroutine("ButtonDelay");
@@ -56,10 +56,11 @@ public class ShipSelector : MonoBehaviour {
 		}
 
 		//game joined
-		if (joinedGame) {
+//		if (selectorState == SelectorState.WaitingForShipSelection) {
 
 			//no selection made
-			if (!selctionConfirmed) {
+//			if (!selctionConfirmed) {
+			if (selectorState == SelectorState.WaitingForShipSelection) {
 				//press B to remove player 
 				if (Input.GetKeyDown(KeyCode.D))  {
 					QuitGame();
@@ -79,14 +80,15 @@ public class ShipSelector : MonoBehaviour {
 			}
 
 			//selection made
-			if (selctionConfirmed) {
+//			if (selctionConfirmed) {
+			if (selectorState == SelectorState.ShipSelected) {
 				//press B to cancel player selection
 				if (Input.GetKeyDown(KeyCode.D))  {
 					UnConfirmSelection();
 				}
 				return;
 			}
-		}
+//		}
 
 	}
 
@@ -94,7 +96,7 @@ public class ShipSelector : MonoBehaviour {
 	void GamePadControls() {
 		if (!canPress) return;
 
-		if (!joinedGame) {
+		if (selectorState == SelectorState.WaitingToJoin) {
 		//press A to add player
 			if (InputPlus.GetData (controllerID, ControllerVarEnum.FP_bottom) == 1) {
 				JoinGame();
@@ -104,10 +106,11 @@ public class ShipSelector : MonoBehaviour {
 		}
 
 		//game joined
-		if (joinedGame) {
+//		if (joinedGame) {
 
 			//no selection made
-			if (!selctionConfirmed) {
+//			if (!selctionConfirmed) {
+			if (selectorState == SelectorState.WaitingForShipSelection) {
 				//press B to remove player 
 				if (InputPlus.GetData (controllerID, ControllerVarEnum.FP_right) == 1)  {
 					QuitGame();
@@ -130,7 +133,8 @@ public class ShipSelector : MonoBehaviour {
 			}
 
 			//selection made
-			if (selctionConfirmed) {
+//			if (selctionConfirmed) {
+			if (selectorState == SelectorState.ShipSelected) {
 				//press B to cancel player selection
 				if (InputPlus.GetData (controllerID, ControllerVarEnum.FP_right) == 1)  {
 					UnConfirmSelection();
@@ -138,35 +142,39 @@ public class ShipSelector : MonoBehaviour {
 				}
 				return;
 			}
-		}
+//		}
 
 
 	}
 
 	void JoinGame() {
 		Debug.Log("JOIN GAME");
-		joinedGame = true;
+//		joinedGame = true;
+		selectorState = SelectorState.WaitingForShipSelection;
 		shipSelector.SetActive (true);
 		joinMessage.SetActive (false);
 	}
 
 	void QuitGame() {
 		Debug.Log("QUIT GAME");
-		joinedGame = false;
+//		joinedGame = false;
+		selectorState = SelectorState.WaitingToJoin;
 		shipSelector.SetActive (false);
 		joinMessage.SetActive (true);
 	}
 
 	void UnConfirmSelection() {
 		Debug.Log("Unconfiurm selection");
-		selctionConfirmed = false;
+		selectorState = SelectorState.WaitingForShipSelection;
+//		selctionConfirmed = false;
 
 		gameController.RemovePlayerShip(playerID);
 	}
 
 	void ConfirmSelection() {
 		Debug.Log("CONFIRM  selection");
-		selctionConfirmed = true;
+//		selctionConfirmed = true;
+		selectorState = SelectorState.ShipSelected;
 
 		gameController.SetPlayerShip(playerID, shipSelectionDisplay[selectionIndex].shipType);
 	}
@@ -204,4 +212,13 @@ public class ShipSelector : MonoBehaviour {
 			return;
 		}
 	}
+}
+
+
+public enum SelectorState {
+	WaitingToJoin,
+	WaitingForShipSelection,
+	ShipSelected,
+	WaitingForPlanetSelection,
+	PlanetSelected
 }

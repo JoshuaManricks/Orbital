@@ -192,6 +192,8 @@ public class FirstPersonController : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
+		if (isDead) return;
+
 		// Apply movement to rigidbody
 		Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
 		rigidbody.MovePosition(rigidbody.position + localMove);

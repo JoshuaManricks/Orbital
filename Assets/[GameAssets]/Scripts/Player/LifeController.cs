@@ -41,7 +41,7 @@ public class LifeController : MonoBehaviour {
 
 		foreach (Collider c in cols) {
 			c.enabled = true; 
-			Debug.Log ("Add rigidbody "+c.name);
+//			Debug.Log ("Add rigidbody "+c.name);
 			c.gameObject.AddComponent<Rigidbody>();
 		}
 
