@@ -13,6 +13,10 @@ public class PowerUpSpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
+	}
+
+	public void StartGame() {
 		InvokeRepeating("SpawnPowerup", 1f, spawnTime);
 	}
 

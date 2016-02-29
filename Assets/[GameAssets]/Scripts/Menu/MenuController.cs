@@ -18,11 +18,13 @@ public class MenuController : MonoBehaviour {
 
 	bool checkForPlayers = true;
 
-	public float rotateSpeed = .2f;
+	CountDown countDown;
 
 	// Use this for initialization
 	void Start () {
 		gameController = GameObject.FindObjectOfType<GameController>();
+
+		countDown = GetComponentInChildren<CountDown>();
 	}
 	
 	// Update is called once per frame
@@ -30,11 +32,45 @@ public class MenuController : MonoBehaviour {
 		if (checkForPlayers) {
 			if (HaveAllPlayersJoined()) {
 				checkForPlayers = false;
-				SpawnPlayers();
+//				SpawnPlayers();
+				StartCountDown();
 			}
 		}
+	}
 
-		transform.RotateAround (Vector3.zero, Vector3.up, rotateSpeed);
+	void StartCountDown() {
+		Debug.Log("StartCountDown");
+		countDown.StartCountDown();
+	}
+
+	public void CancelCountDown() {
+		Debug.Log("CancelCountDown");
+		checkForPlayers = true;
+		countDown.CancelCountDown();
+	}
+
+	public void SelectPlanet() {
+		Debug.Log("SelectPlanet");
+		
+		player1.selectorState = SelectorState.WaitingForPlanetSelection;
+		player2.selectorState = SelectorState.WaitingForPlanetSelection;
+		player3.selectorState = SelectorState.WaitingForPlanetSelection;
+		player4.selectorState = SelectorState.WaitingForPlanetSelection;
+
+	}
+		
+	public void ChangePlanet(int direction) {
+
+		planets[planetID].gameObject.SetActive(false);
+		planetID += direction;
+		planetID = Mathf.Clamp(planetID, 0, planets.Length-1);
+		planets[planetID].gameObject.SetActive(true);
+
+	}
+
+	public void ConfirmPlanet() {
+//		StartCoroutine("StartGame");
+		SpawnPlayers();
 	}
 
 	void SpawnPlayers() {

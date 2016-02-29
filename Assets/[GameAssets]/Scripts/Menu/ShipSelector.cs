@@ -18,9 +18,11 @@ public class ShipSelector : MonoBehaviour {
 
 	public bool useKeyboard = false;
 
+	public MenuController menuController;
+
 	// Use this for initialization
 	void Start () {
-		
+		menuController = GameObject.FindObjectOfType<MenuController>();
 		gameController = GameObject.FindObjectOfType<GameController>();
 
 		SetupController();
@@ -84,10 +86,25 @@ public class ShipSelector : MonoBehaviour {
 			if (selectorState == SelectorState.ShipSelected) {
 				//press B to cancel player selection
 				if (Input.GetKeyDown(KeyCode.D))  {
-					UnConfirmSelection();
+				UnConfirmSelection();
+				menuController.CancelCountDown();
 				}
 				return;
 			}
+
+			if (selectorState == SelectorState.WaitingForPlanetSelection && 
+				playerID== PlayerID.P1) {
+				
+				if (Input.GetKeyDown(KeyCode.UpArrow)) {
+					menuController.ChangePlanet(1);
+				} else if (Input.GetKeyDown(KeyCode.DownArrow))  {
+					menuController.ChangePlanet(-1);
+				}
+				
+				if (Input.GetKeyDown(KeyCode.A))  menuController.ConfirmPlanet();
+				
+			}
+
 //		}
 
 	}
@@ -138,10 +155,28 @@ public class ShipSelector : MonoBehaviour {
 				//press B to cancel player selection
 				if (InputPlus.GetData (controllerID, ControllerVarEnum.FP_right) == 1)  {
 					UnConfirmSelection();
+					menuController.CancelCountDown();
 					StartCoroutine("ButtonDelay");
 				}
 				return;
 			}
+
+
+
+		if (selectorState == SelectorState.WaitingForPlanetSelection && 
+			playerID== PlayerID.P1) {
+
+			if (InputPlus.GetData (controllerID, ControllerVarEnum.dpad_up) == 1) {
+				menuController.ChangePlanet(1);
+				StartCoroutine("ButtonDelay");
+			} else if (InputPlus.GetData (controllerID, ControllerVarEnum.dpad_down) == 1)  {
+				menuController.ChangePlanet(-1);
+				StartCoroutine("ButtonDelay");
+			}
+
+			if (InputPlus.GetData (controllerID, ControllerVarEnum.FP_bottom) == 1)  menuController.ConfirmPlanet();
+
+		}
 //		}
 
 
